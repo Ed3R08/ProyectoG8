@@ -48,7 +48,7 @@
                     <div class="navbar-brand">
                         <a href="index.html" class="logo">
                             <b class="logo-icon">
-                                <img src="../Imagenes/logo-icon.png" alt="logo" class="dark-logo" />
+                                <img src="../Imagenes/logo.jpg" alt="logo" class="dark-logo" />
                             </b>
                             <span class="logo-text">
                                 <img src="../Imagenes/logo-text.png" alt="texto logo" class="dark-logo" />
