@@ -38,7 +38,7 @@
 
 <body>
     <div id="main-wrapper">
-        <!-- Encabezado -->
+      
         <header class="topbar">
             <nav class="navbar top-navbar navbar-expand-md navbar-dark">
                 <div class="navbar-header">
@@ -95,7 +95,7 @@
             </nav>
         </header>
 
-        <!-- Barra lateral -->
+      
         <aside class="left-sidebar">
             <div class="scroll-sidebar">
                 <nav class="sidebar-nav">
@@ -110,7 +110,7 @@
             </div>
         </aside>
 
-        <!-- Contenido principal -->
+   
         <div class="page-wrapper">
             <div class="page-breadcrumb">
                 <div class="row">
@@ -136,7 +136,7 @@
         </div>
     </div>
 
-    <!-- Scripts -->
+   
     <script src="../Funciones/jquery.min.js"></script>
     <script src="../Funciones/popper.min.js"></script>
     <script src="../Funciones/bootstrap.min.js"></script>
