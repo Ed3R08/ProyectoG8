@@ -58,8 +58,10 @@
                                     </div>
                                 </div>
                                 <div class="profile-dis scrollable">
-                                    <a class="dropdown-item" href="javascript:void(0)">
-                                        <i class="ti-user m-r-5 m-l-5"></i> Mi perfil</a>
+                                    <a class="dropdown-item" href="perfil.php">
+                                        <i class="ti-user m-r-5 m-l-5"></i> Mi perfil
+                                    </a>
+
                                     <a class="dropdown-item" href="javascript:void(0)">
                                         <i class="ti-wallet m-r-5 m-l-5"></i> Mi saldo</a>
                                 </div>
