@@ -108,39 +108,78 @@
     }
 
     function ShowMenu()
-    {
-        $idRol = "";
-
-        if(isset($_SESSION["IdRol"]))
-        {
-           $idRol = $_SESSION["IdRol"];
-        }
-
-        echo 
-            '<aside class="left-sidebar">
-                <div class="scroll-sidebar">
-                    <nav class="sidebar-nav">
-                        <ul id="sidebarnav">';
-
-                        if($idRol != 1)
-                        {
-                            echo '
-                            <li class="sidebar-item"> 
-                                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="index.html" aria-expanded="false">
-                                    <i class="ti-tag"></i><span class="hide-menu">Mant. Productos</span>
-                                </a>
-                            </li>';
-                        }
-                        else
-                        {
-                            
-                        }
-
-        echo '          </ul>
-                    </nav>
-                </div>
-            </aside>';
+{
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
     }
+    // Para depurar, imprime en HTML:
+    // echo "<!-- idRol en ShowMenu: {$ _SESSION['IdRol']} -->";
+
+    $idRol = $_SESSION["IdRol"] ?? '';
+
+    echo '<aside class="left-sidebar">
+            <div class="scroll-sidebar">
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">';
+
+    // Siempre disponible
+    echo '<li class="sidebar-item">
+            <a class="sidebar-link waves-effect waves-dark sidebar-link"
+               href="../Home/principal.php" aria-expanded="false">
+              <i class="mdi mdi-home"></i><span class="hide-menu">Inicio</span>
+            </a>
+          </li>';
+
+    if ($idRol == 2) {
+        // *** ADMINISTRADOR (IdRol = 2) ***
+        echo '<li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                   href="../Categoria/registro.php" aria-expanded="false">
+                  <i class="fa fa-tags"></i><span class="hide-menu">Registrar Categoría</span>
+                </a>
+              </li>';
+        echo '<li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                   href="../Categoria/listado.php" aria-expanded="false">
+                  <i class="fa fa-list"></i><span class="hide-menu">Lista de Categorías</span>
+                </a>
+              </li>';
+        echo '<li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                   href="../Producto/registro.php" aria-expanded="false">
+                  <i class="fa fa-box"></i><span class="hide-menu">Registrar Producto</span>
+                </a>
+              </li>';
+        echo '<li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                   href="../Producto/listado.php" aria-expanded="false">
+                  <i class="fa fa-list-alt"></i><span class="hide-menu">Lista de Productos</span>
+                </a>
+              </li>';
+    } else {
+        // *** USUARIO REGULAR (cualquier otro IdRol) ***
+        echo '<li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                   href="../Categoria/listado.php" aria-expanded="false">
+                  <i class="fa fa-list"></i><span class="hide-menu">Lista de Categorías</span>
+                </a>
+              </li>';
+        echo '<li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                   href="../Producto/listado.php" aria-expanded="false">
+                  <i class="fa fa-list-alt"></i><span class="hide-menu">Lista de Productos</span>
+                </a>
+              </li>';
+    }
+
+    echo '    </ul>
+                </nav>
+            </div>
+          </aside>';
+}
+
+
+
 
     function AddCss()
     {
