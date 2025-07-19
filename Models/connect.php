@@ -1,8 +1,9 @@
 <?php
+echo "connect cargado correctamente<br>";
 
     function OpenDB()
     {
-        return mysqli_connect("127.0.0.1:3307","root","","octaviusDB");
+        return mysqli_connect("127.0.0.1:3307","root","","proyecto");
     }
 
     function CloseDB($context)
