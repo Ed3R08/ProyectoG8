@@ -33,7 +33,7 @@ switch ($accion) {
         if ($carrito_id) {
             CarritoModel::actualizar($carrito_id, $nueva_cantidad);
         }
-        header("Location: ../Carrito/verCarrito.php");
+        header("Location: ../Views/Carrito/verCarrito.php");
         break;
 
     case 'eliminar':
@@ -42,10 +42,11 @@ switch ($accion) {
         if ($carrito_id) {
             CarritoModel::eliminar($carrito_id);
         }
-        header("Location: ../Carrito/verCarrito.php");
+        header("Location: ../Views/Carrito/verCarrito.php");
+
         break;
 
     default:
-        header("Location: ../Home/principal.php");
+        header("Location: ../Views/Home/principal.php");
         break;
 }
