@@ -237,6 +237,137 @@ LOCK TABLES `visita_tecnica` WRITE;
 /*!40000 ALTER TABLE `visita_tecnica` ENABLE KEYS */;
 UNLOCK TABLES;
 
+CREATE TABLE carrito (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id BIGINT NOT NULL,
+  producto_id BIGINT NOT NULL,
+  cantidad INT NOT NULL DEFAULT 1,
+  fecha_agregado DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (usuario_id) REFERENCES tusuario(IdUsuario),
+  FOREIGN KEY (producto_id) REFERENCES producto(id_producto)
+);
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_agregar_carrito1 $$
+CREATE PROCEDURE sp_agregar_carrito1(
+    IN p_usuario_id BIGINT,
+    IN p_producto_id BIGINT,
+    IN p_cantidad INT
+)
+BEGIN
+    DECLARE existe INT;
+
+    SELECT COUNT(*) INTO existe
+    FROM carrito
+    WHERE usuario_id = p_usuario_id AND producto_id = p_producto_id;
+
+    IF existe = 0 THEN
+        INSERT INTO carrito(usuario_id, producto_id, cantidad)
+        VALUES (p_usuario_id, p_producto_id, p_cantidad);
+    ELSE
+        UPDATE carrito
+        SET cantidad = cantidad + p_cantidad
+        WHERE usuario_id = p_usuario_id AND producto_id = p_producto_id;
+    END IF;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS sp_ver_carrito;
+DELIMITER $$
+CREATE PROCEDURE sp_ver_carrito(
+    IN p_usuario_id BIGINT
+)
+BEGIN
+    SELECT c.id, p.nombre, p.precio, c.cantidad, (p.precio * c.cantidad) AS subtotal
+    FROM carrito c
+    JOIN producto p ON p.id_producto = c.producto_id
+    WHERE c.usuario_id = p_usuario_id;
+END $$
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS sp_eliminar_carrito;
+DELIMITER $$
+CREATE PROCEDURE sp_eliminar_carrito(
+    IN p_carrito_id INT
+)
+BEGIN
+    DELETE FROM carrito
+    WHERE id = p_carrito_id;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS sp_actualizar_carrito;
+DELIMITER $$
+CREATE PROCEDURE sp_actualizar_carrito(
+    IN p_carrito_id INT,
+    IN p_nueva_cantidad INT
+)
+BEGIN
+    UPDATE carrito
+    SET cantidad = p_nueva_cantidad
+    WHERE id = p_carrito_id;
+END $$
+
+DELIMITER ;
+
+--
+-- Table structure for table `historial_compras`
+--
+
+CREATE TABLE IF NOT EXISTS historial_compras (
+    id_compra BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario BIGINT NOT NULL,
+    total DECIMAL(12,2) NOT NULL,
+    fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES tusuario(IdUsuario) ON DELETE CASCADE
+);
+
+--
+-- Table structure for table `historial_detalle`
+--
+
+CREATE TABLE IF NOT EXISTS historial_detalle (
+    id_detalle BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_compra BIGINT NOT NULL,
+    producto_id BIGINT NOT NULL,
+    cantidad INT NOT NULL,
+    precio DECIMAL(12,2) NOT NULL,
+    FOREIGN KEY (id_compra) REFERENCES historial_compras(id_compra) ON DELETE CASCADE,
+    FOREIGN KEY (producto_id) REFERENCES producto(id_producto)
+);
+
+DELIMITER $$
+CREATE PROCEDURE sp_finalizar_compra(
+    IN p_usuario_id BIGINT
+)
+BEGIN
+    DECLARE v_total DECIMAL(12,2);
+
+    -- Calcular total del carrito
+    SELECT SUM(p.precio * c.cantidad) INTO v_total
+    FROM carrito c
+    JOIN producto p ON p.id_producto = c.producto_id
+    WHERE c.usuario_id = p_usuario_id;
+
+    -- Insertar en historial_compras
+    INSERT INTO historial_compras(id_usuario, total)
+    VALUES (p_usuario_id, v_total);
+
+    -- Insertar cada producto del carrito en historial_detalle
+    INSERT INTO historial_detalle(id_compra, producto_id, cantidad, precio)
+    SELECT LAST_INSERT_ID(), c.producto_id, c.cantidad, p.precio
+    FROM carrito c
+    JOIN producto p ON p.id_producto = c.producto_id
+    WHERE c.usuario_id = p_usuario_id;
+
+    -- Vaciar carrito
+    DELETE FROM carrito WHERE usuario_id = p_usuario_id;
+END $$
+DELIMITER ;
+
+
 --
 -- Dumping routines for database 'octaviusdb'
 --
