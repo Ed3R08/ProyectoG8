@@ -35,7 +35,7 @@ CREATE TABLE `carrito` (
   KEY `producto_id` (`producto_id`),
   CONSTRAINT `carrito_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `tusuario` (`IdUsuario`),
   CONSTRAINT `carrito_ibfk_2` FOREIGN KEY (`producto_id`) REFERENCES `producto` (`id_producto`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -88,7 +88,7 @@ CREATE TABLE `historial_compras` (
   PRIMARY KEY (`id_compra`),
   KEY `id_usuario` (`id_usuario`),
   CONSTRAINT `historial_compras_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `tusuario` (`IdUsuario`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -97,7 +97,7 @@ CREATE TABLE `historial_compras` (
 
 LOCK TABLES `historial_compras` WRITE;
 /*!40000 ALTER TABLE `historial_compras` DISABLE KEYS */;
-INSERT INTO `historial_compras` VALUES (1,1,730.00,'2025-07-23 11:10:04'),(2,1,30.00,'2025-07-23 11:10:29');
+INSERT INTO `historial_compras` VALUES (1,1,730.00,'2025-07-23 11:10:04'),(2,1,30.00,'2025-07-23 11:10:29'),(3,1,30.00,'2025-07-23 16:36:37'),(4,1,30.00,'2025-07-23 16:52:16'),(5,1,30.00,'2025-07-23 16:53:08');
 /*!40000 ALTER TABLE `historial_compras` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -119,7 +119,7 @@ CREATE TABLE `historial_detalle` (
   KEY `producto_id` (`producto_id`),
   CONSTRAINT `historial_detalle_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `historial_compras` (`id_compra`) ON DELETE CASCADE,
   CONSTRAINT `historial_detalle_ibfk_2` FOREIGN KEY (`producto_id`) REFERENCES `producto` (`id_producto`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -128,7 +128,7 @@ CREATE TABLE `historial_detalle` (
 
 LOCK TABLES `historial_detalle` WRITE;
 /*!40000 ALTER TABLE `historial_detalle` DISABLE KEYS */;
-INSERT INTO `historial_detalle` VALUES (1,1,13,1,300.00),(2,1,6,6,30.00),(3,1,15,1,250.00),(4,2,6,1,30.00);
+INSERT INTO `historial_detalle` VALUES (1,1,13,1,300.00),(2,1,6,6,30.00),(3,1,15,1,250.00),(4,2,6,1,30.00),(5,3,6,1,30.00),(6,4,6,1,30.00),(7,5,6,1,30.00);
 /*!40000 ALTER TABLE `historial_detalle` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -176,7 +176,7 @@ CREATE TABLE `terror` (
   `Descripcion` varchar(5000) NOT NULL,
   `FechaHora` datetime NOT NULL,
   PRIMARY KEY (`IdError`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -185,7 +185,7 @@ CREATE TABLE `terror` (
 
 LOCK TABLES `terror` WRITE;
 /*!40000 ALTER TABLE `terror` DISABLE KEYS */;
-INSERT INTO `terror` VALUES (1,'PROCEDURE mndatabase.ValidarInicioSesion2 does not exist','2025-06-18 19:49:23'),(2,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:23'),(3,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:29'),(4,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:30'),(5,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:30'),(6,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:30'),(7,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:31'),(8,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:31'),(9,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:32'),(10,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:32'),(11,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:32'),(12,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:33'),(13,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:33'),(14,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:33'),(15,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:10:39'),(16,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:14:00'),(17,'Unknown column \'pCorreo\' in \'field list\'','2025-07-09 19:01:06'),(18,'You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near \'\\\'Quimicos\\\', \\\'\\\')\' at line 1','2025-07-11 10:26:29'),(19,'You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near \'\\\'Quimicos\\\', \\\'https://i.imgur.com/ZFt2HRb.jpg\\\')\' at line 1','2025-07-11 10:27:05'),(20,'You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near \'\\\'Prueba\\\', \\\'C:\\\\Users\\\\XPC\\\\OneDrive\\\\Imágenes\\\\Goku2\\\')\' at line 1','2025-07-11 10:29:09'),(21,'You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near \'\\\'Prueba\\\', \\\'C:\\\\Users\\\\XPC\\\\OneDrive\\\\Imágenes\\\\Goku2\\\')\' at line 1','2025-07-11 11:06:04'),(22,'PROCEDURE octaviusdb.EliminarProducto does not exist','2025-07-23 09:57:07'),(23,'PROCEDURE octaviusdb.EliminarProducto does not exist','2025-07-23 09:58:08'),(24,'PROCEDURE octaviusdb.EditarProducto does not exist','2025-07-23 09:58:34'),(25,'PROCEDURE octaviusdb.EliminarProducto does not exist','2025-07-23 10:10:46'),(26,'PROCEDURE octaviusdb.EditarProducto does not exist','2025-07-23 10:11:23');
+INSERT INTO `terror` VALUES (1,'PROCEDURE mndatabase.ValidarInicioSesion2 does not exist','2025-06-18 19:49:23'),(2,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:23'),(3,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:29'),(4,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:30'),(5,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:30'),(6,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:30'),(7,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:31'),(8,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:31'),(9,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:32'),(10,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:32'),(11,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:32'),(12,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:33'),(13,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:33'),(14,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:33'),(15,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:10:39'),(16,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:14:00'),(17,'Unknown column \'pCorreo\' in \'field list\'','2025-07-09 19:01:06'),(18,'You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near \'\\\'Quimicos\\\', \\\'\\\')\' at line 1','2025-07-11 10:26:29'),(19,'You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near \'\\\'Quimicos\\\', \\\'https://i.imgur.com/ZFt2HRb.jpg\\\')\' at line 1','2025-07-11 10:27:05'),(20,'You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near \'\\\'Prueba\\\', \\\'C:\\\\Users\\\\XPC\\\\OneDrive\\\\Imágenes\\\\Goku2\\\')\' at line 1','2025-07-11 10:29:09'),(21,'You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near \'\\\'Prueba\\\', \\\'C:\\\\Users\\\\XPC\\\\OneDrive\\\\Imágenes\\\\Goku2\\\')\' at line 1','2025-07-11 11:06:04'),(22,'PROCEDURE octaviusdb.EliminarProducto does not exist','2025-07-23 09:57:07'),(23,'PROCEDURE octaviusdb.EliminarProducto does not exist','2025-07-23 09:58:08'),(24,'PROCEDURE octaviusdb.EditarProducto does not exist','2025-07-23 09:58:34'),(25,'PROCEDURE octaviusdb.EliminarProducto does not exist','2025-07-23 10:10:46'),(26,'PROCEDURE octaviusdb.EditarProducto does not exist','2025-07-23 10:11:23'),(27,'PROCEDURE octaviusdb.EditarProducto does not exist','2025-07-23 16:40:11'),(28,'PROCEDURE octaviusdb.EliminarProducto does not exist','2025-07-23 16:41:01'),(29,'PROCEDURE octaviusdb.EditarProducto does not exist','2025-07-23 16:59:15'),(30,'PROCEDURE octaviusdb.EditarProducto does not exist','2025-07-23 17:01:26'),(31,'PROCEDURE octaviusdb.EliminarProducto does not exist','2025-07-23 17:03:26');
 /*!40000 ALTER TABLE `terror` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -402,6 +402,62 @@ BEGIN
 	FROM 	tusuario
 	WHERE 	IdUsuario = pIdUsuario;
 
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `EditarProducto` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `EditarProducto`(
+    IN pId_producto BIGINT,
+    IN pIdCategoria INT,
+    IN pNombre VARCHAR(100),
+    IN pDetalle VARCHAR(50),
+    IN pPrecio DECIMAL(12,2),
+    IN pExistencias INT,
+    IN pRutaImagen VARCHAR(255)
+)
+BEGIN
+    UPDATE producto
+    SET id_categoria = pIdCategoria,
+        nombre = pNombre,
+        detalle = pDetalle,
+        precio = pPrecio,
+        existencias = pExistencias,
+        ruta_imagen = pRutaImagen
+    WHERE id_producto = pId_producto;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `EliminarProducto` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `EliminarProducto`(
+    IN pId_producto BIGINT
+)
+BEGIN
+    DELETE FROM producto
+    WHERE id_producto = pId_producto;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -837,4 +893,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-23 11:17:16
+-- Dump completed on 2025-07-23 17:23:54
