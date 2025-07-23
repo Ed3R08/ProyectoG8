@@ -18,6 +18,36 @@ USE `octaviusdb`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `carrito`
+--
+
+DROP TABLE IF EXISTS `carrito`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `carrito` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `usuario_id` bigint(20) NOT NULL,
+  `producto_id` bigint(20) NOT NULL,
+  `cantidad` int(11) NOT NULL DEFAULT 1,
+  `fecha_agregado` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  KEY `producto_id` (`producto_id`),
+  CONSTRAINT `carrito_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `tusuario` (`IdUsuario`),
+  CONSTRAINT `carrito_ibfk_2` FOREIGN KEY (`producto_id`) REFERENCES `producto` (`id_producto`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `carrito`
+--
+
+LOCK TABLES `carrito` WRITE;
+/*!40000 ALTER TABLE `carrito` DISABLE KEYS */;
+/*!40000 ALTER TABLE `carrito` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `categoria`
 --
 
@@ -30,7 +60,7 @@ CREATE TABLE `categoria` (
   `ruta_imagen` varchar(255) DEFAULT NULL,
   `activo` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id_categoria`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,8 +69,67 @@ CREATE TABLE `categoria` (
 
 LOCK TABLES `categoria` WRITE;
 /*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
-INSERT INTO `categoria` VALUES (1,'Servicios','https://i.imgur.com/ZFt2HRb.jpg',1),(2,'Químicos','https://i.imgur.com/ZFt2HRb.jpg',1),(3,'Accesorios','https://i.imgur.com/mj0gYIx.jpg',1),(4,'Equipos','https://i.imgur.com/qV97892.jpg',1);
+INSERT INTO `categoria` VALUES (1,'Servicios','https://i.imgur.com/ZFt2HRb.jpg',1),(2,'Químicos','https://i.imgur.com/ZFt2HRb.jpg',1),(3,'Accesorios','https://i.imgur.com/mj0gYIx.jpg',1),(4,'Equipos','https://i.imgur.com/qV97892.jpg',1),(5,'Prueba','C:\\Users\\XPC\\OneDrive\\Imágenes\\Goku2',1);
 /*!40000 ALTER TABLE `categoria` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `historial_compras`
+--
+
+DROP TABLE IF EXISTS `historial_compras`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `historial_compras` (
+  `id_compra` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id_usuario` bigint(20) NOT NULL,
+  `total` decimal(12,2) NOT NULL,
+  `fecha` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_compra`),
+  KEY `id_usuario` (`id_usuario`),
+  CONSTRAINT `historial_compras_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `tusuario` (`IdUsuario`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `historial_compras`
+--
+
+LOCK TABLES `historial_compras` WRITE;
+/*!40000 ALTER TABLE `historial_compras` DISABLE KEYS */;
+INSERT INTO `historial_compras` VALUES (1,1,730.00,'2025-07-23 11:10:04'),(2,1,30.00,'2025-07-23 11:10:29');
+/*!40000 ALTER TABLE `historial_compras` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `historial_detalle`
+--
+
+DROP TABLE IF EXISTS `historial_detalle`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `historial_detalle` (
+  `id_detalle` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id_compra` bigint(20) NOT NULL,
+  `producto_id` bigint(20) NOT NULL,
+  `cantidad` int(11) NOT NULL,
+  `precio` decimal(12,2) NOT NULL,
+  PRIMARY KEY (`id_detalle`),
+  KEY `id_compra` (`id_compra`),
+  KEY `producto_id` (`producto_id`),
+  CONSTRAINT `historial_detalle_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `historial_compras` (`id_compra`) ON DELETE CASCADE,
+  CONSTRAINT `historial_detalle_ibfk_2` FOREIGN KEY (`producto_id`) REFERENCES `producto` (`id_producto`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `historial_detalle`
+--
+
+LOCK TABLES `historial_detalle` WRITE;
+/*!40000 ALTER TABLE `historial_detalle` DISABLE KEYS */;
+INSERT INTO `historial_detalle` VALUES (1,1,13,1,300.00),(2,1,6,6,30.00),(3,1,15,1,250.00),(4,2,6,1,30.00);
+/*!40000 ALTER TABLE `historial_detalle` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -62,7 +151,7 @@ CREATE TABLE `producto` (
   PRIMARY KEY (`id_producto`),
   KEY `fk_producto_categoria` (`id_categoria`),
   CONSTRAINT `fk_producto_categoria` FOREIGN KEY (`id_categoria`) REFERENCES `categoria` (`id_categoria`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +160,7 @@ CREATE TABLE `producto` (
 
 LOCK TABLES `producto` WRITE;
 /*!40000 ALTER TABLE `producto` DISABLE KEYS */;
-INSERT INTO `producto` VALUES (1,1,'Mantenimiento','Servicio integral de mantenimiento de piscinas, incluyendo revisión y limpieza profunda de equipos y estructuras.',150.00,10,'https://i.imgur.com/ZFt2HRb.jpg',1),(2,1,'Limpieza','Servicio regular de limpieza para mantener el agua cristalina y libre de impurezas.',100.00,15,'https://i.imgur.com/CB2H0XY.jpg',1),(3,1,'Visita Técnica','Visita técnica para diagnóstico y solución de problemas en el sistema de la piscina.',200.00,5,'https://i.imgur.com/sisEdjN.jpg',1),(4,2,'Cloro Granulado','Cloro granulado para desinfección rápida y efectiva del agua de la piscina.',50.00,100,'https://i.imgur.com/yUnRO97.jpg',1),(5,2,'Cloro en Tabletas','Tabletas de cloro de liberación controlada para el mantenimiento diario.',80.00,80,'https://i.imgur.com/A7MS0u3.jpg',1),(6,2,'Alguicida','Producto para eliminar y prevenir el crecimiento de algas en la piscina.',30.00,120,'https://i.imgur.com/qmNhWJ2.jpg',1),(7,2,'Clarificador','Producto que mejora la claridad del agua eliminando partículas en suspensión.',25.00,150,'https://i.imgur.com/qP0Ew8p.jpg',1),(8,3,'Boquillas de Retorno','Boquillas para un óptimo retorno del agua en piscinas.',35.00,50,'https://i.imgur.com/0AloD4A.jpg',1),(9,3,'Hidrojets','Sistemas de hidrojets para masaje y mejor circulación del agua.',120.00,30,'https://i.imgur.com/7jaExhD.jpg',1),(10,3,'Parrillas de Fondo','Parrillas que facilitan el drenaje y la limpieza del fondo de la piscina.',45.00,40,'https://i.imgur.com/PcKDLFI.jpg',1),(11,3,'Skimmer','Skimmer para recoger hojas y residuos en la superficie del agua.',60.00,25,'https://i.imgur.com/AnYNpT6.jpg',1),(12,3,'Rebalse','Sistema de rebalse para evitar el sobrellenado de la piscina.',55.00,20,'https://i.imgur.com/JX0BtQH.jpg',1),(13,4,'Bomba de Agua','Bomba de alta eficiencia para la circulación y recirculación del agua de la piscina.',300.00,10,'https://i.imgur.com/dhjw4Cm.jpg',1),(14,4,'Filtro de Piscina','Filtro de alta capacidad para mantener el agua limpia y libre de impurezas.',400.00,8,'https://i.imgur.com/0WqE6yU.jpg',1),(15,4,'Clorinador','Sistema automático que dosifica cloro en la piscina para garantizar la desinfección continua.',250.00,12,'https://i.imgur.com/y5qAZYw.jpg',1),(16,3,'Goku','Prueba de producto placeholder.',100.00,5,NULL,1);
+INSERT INTO `producto` VALUES (1,1,'Mantenimiento','Servicio integral de mantenimiento de piscinas, incluyendo revisión y limpieza profunda de equipos y estructuras.',150.00,10,'https://i.imgur.com/ZFt2HRb.jpg',1),(2,1,'Limpieza','Servicio regular de limpieza para mantener el agua cristalina y libre de impurezas.',100.00,15,'https://i.imgur.com/CB2H0XY.jpg',1),(3,1,'Visita Técnica','Visita técnica para diagnóstico y solución de problemas en el sistema de la piscina.',200.00,5,'https://i.imgur.com/sisEdjN.jpg',1),(4,2,'Cloro Granulado','Cloro granulado para desinfección rápida y efectiva del agua de la piscina.',50.00,100,'https://i.imgur.com/yUnRO97.jpg',1),(5,2,'Cloro en Tabletas','Tabletas de cloro de liberación controlada para el mantenimiento diario.',80.00,80,'https://i.imgur.com/A7MS0u3.jpg',1),(6,2,'Alguicida','Producto para eliminar y prevenir el crecimiento de algas en la piscina.',30.00,120,'https://i.imgur.com/qmNhWJ2.jpg',1),(7,2,'Clarificador','Producto que mejora la claridad del agua eliminando partículas en suspensión.',25.00,150,'https://i.imgur.com/qP0Ew8p.jpg',1),(8,3,'Boquillas de Retorno','Boquillas para un óptimo retorno del agua en piscinas.',35.00,50,'https://i.imgur.com/0AloD4A.jpg',1),(9,3,'Hidrojets','Sistemas de hidrojets para masaje y mejor circulación del agua.',120.00,30,'https://i.imgur.com/7jaExhD.jpg',1),(10,3,'Parrillas de Fondo','Parrillas que facilitan el drenaje y la limpieza del fondo de la piscina.',45.00,40,'https://i.imgur.com/PcKDLFI.jpg',1),(11,3,'Skimmer','Skimmer para recoger hojas y residuos en la superficie del agua.',60.00,25,'https://i.imgur.com/AnYNpT6.jpg',1),(12,3,'Rebalse','Sistema de rebalse para evitar el sobrellenado de la piscina.',55.00,20,'https://i.imgur.com/JX0BtQH.jpg',1),(13,4,'Bomba de Agua','Bomba de alta eficiencia para la circulación y recirculación del agua de la piscina.',300.00,10,'https://i.imgur.com/dhjw4Cm.jpg',1),(14,4,'Filtro de Piscina','Filtro de alta capacidad para mantener el agua limpia y libre de impurezas.',400.00,8,'https://i.imgur.com/0WqE6yU.jpg',1),(15,4,'Clorinador','Sistema automático que dosifica cloro en la piscina para garantizar la desinfección continua.',250.00,12,'https://i.imgur.com/y5qAZYw.jpg',1),(16,3,'Goku','Prueba de producto placeholder.',100.00,5,NULL,1),(17,5,'Prueba1','asdasa',10000.00,20,'https://i.imgur.com/ZFt2HRb.jpg',1);
 /*!40000 ALTER TABLE `producto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -87,7 +176,7 @@ CREATE TABLE `terror` (
   `Descripcion` varchar(5000) NOT NULL,
   `FechaHora` datetime NOT NULL,
   PRIMARY KEY (`IdError`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -96,7 +185,7 @@ CREATE TABLE `terror` (
 
 LOCK TABLES `terror` WRITE;
 /*!40000 ALTER TABLE `terror` DISABLE KEYS */;
-INSERT INTO `terror` VALUES (1,'PROCEDURE mndatabase.ValidarInicioSesion2 does not exist','2025-06-18 19:49:23'),(2,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:23'),(3,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:29'),(4,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:30'),(5,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:30'),(6,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:30'),(7,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:31'),(8,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:31'),(9,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:32'),(10,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:32'),(11,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:32'),(12,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:33'),(13,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:33'),(14,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:33'),(15,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:10:39'),(16,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:14:00'),(17,'Unknown column \'pCorreo\' in \'field list\'','2025-07-09 19:01:06');
+INSERT INTO `terror` VALUES (1,'PROCEDURE mndatabase.ValidarInicioSesion2 does not exist','2025-06-18 19:49:23'),(2,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:23'),(3,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:29'),(4,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:30'),(5,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:30'),(6,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:30'),(7,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:31'),(8,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:31'),(9,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:32'),(10,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:32'),(11,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:32'),(12,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:33'),(13,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:33'),(14,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:08:33'),(15,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:10:39'),(16,'Unknown column \'Identificacion2\' in \'field list\'','2025-06-18 20:14:00'),(17,'Unknown column \'pCorreo\' in \'field list\'','2025-07-09 19:01:06'),(18,'You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near \'\\\'Quimicos\\\', \\\'\\\')\' at line 1','2025-07-11 10:26:29'),(19,'You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near \'\\\'Quimicos\\\', \\\'https://i.imgur.com/ZFt2HRb.jpg\\\')\' at line 1','2025-07-11 10:27:05'),(20,'You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near \'\\\'Prueba\\\', \\\'C:\\\\Users\\\\XPC\\\\OneDrive\\\\Imágenes\\\\Goku2\\\')\' at line 1','2025-07-11 10:29:09'),(21,'You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near \'\\\'Prueba\\\', \\\'C:\\\\Users\\\\XPC\\\\OneDrive\\\\Imágenes\\\\Goku2\\\')\' at line 1','2025-07-11 11:06:04'),(22,'PROCEDURE octaviusdb.EliminarProducto does not exist','2025-07-23 09:57:07'),(23,'PROCEDURE octaviusdb.EliminarProducto does not exist','2025-07-23 09:58:08'),(24,'PROCEDURE octaviusdb.EditarProducto does not exist','2025-07-23 09:58:34'),(25,'PROCEDURE octaviusdb.EliminarProducto does not exist','2025-07-23 10:10:46'),(26,'PROCEDURE octaviusdb.EditarProducto does not exist','2025-07-23 10:11:23');
 /*!40000 ALTER TABLE `terror` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -237,137 +326,6 @@ LOCK TABLES `visita_tecnica` WRITE;
 /*!40000 ALTER TABLE `visita_tecnica` ENABLE KEYS */;
 UNLOCK TABLES;
 
-CREATE TABLE carrito (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  usuario_id BIGINT NOT NULL,
-  producto_id BIGINT NOT NULL,
-  cantidad INT NOT NULL DEFAULT 1,
-  fecha_agregado DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (usuario_id) REFERENCES tusuario(IdUsuario),
-  FOREIGN KEY (producto_id) REFERENCES producto(id_producto)
-);
-
-
-DELIMITER $$
-DROP PROCEDURE IF EXISTS sp_agregar_carrito1 $$
-CREATE PROCEDURE sp_agregar_carrito1(
-    IN p_usuario_id BIGINT,
-    IN p_producto_id BIGINT,
-    IN p_cantidad INT
-)
-BEGIN
-    DECLARE existe INT;
-
-    SELECT COUNT(*) INTO existe
-    FROM carrito
-    WHERE usuario_id = p_usuario_id AND producto_id = p_producto_id;
-
-    IF existe = 0 THEN
-        INSERT INTO carrito(usuario_id, producto_id, cantidad)
-        VALUES (p_usuario_id, p_producto_id, p_cantidad);
-    ELSE
-        UPDATE carrito
-        SET cantidad = cantidad + p_cantidad
-        WHERE usuario_id = p_usuario_id AND producto_id = p_producto_id;
-    END IF;
-END $$
-DELIMITER ;
-
-DROP PROCEDURE IF EXISTS sp_ver_carrito;
-DELIMITER $$
-CREATE PROCEDURE sp_ver_carrito(
-    IN p_usuario_id BIGINT
-)
-BEGIN
-    SELECT c.id, p.nombre, p.precio, c.cantidad, (p.precio * c.cantidad) AS subtotal
-    FROM carrito c
-    JOIN producto p ON p.id_producto = c.producto_id
-    WHERE c.usuario_id = p_usuario_id;
-END $$
-DELIMITER ;
-
-
-DROP PROCEDURE IF EXISTS sp_eliminar_carrito;
-DELIMITER $$
-CREATE PROCEDURE sp_eliminar_carrito(
-    IN p_carrito_id INT
-)
-BEGIN
-    DELETE FROM carrito
-    WHERE id = p_carrito_id;
-END $$
-DELIMITER ;
-
-DROP PROCEDURE IF EXISTS sp_actualizar_carrito;
-DELIMITER $$
-CREATE PROCEDURE sp_actualizar_carrito(
-    IN p_carrito_id INT,
-    IN p_nueva_cantidad INT
-)
-BEGIN
-    UPDATE carrito
-    SET cantidad = p_nueva_cantidad
-    WHERE id = p_carrito_id;
-END $$
-
-DELIMITER ;
-
---
--- Table structure for table `historial_compras`
---
-
-CREATE TABLE IF NOT EXISTS historial_compras (
-    id_compra BIGINT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario BIGINT NOT NULL,
-    total DECIMAL(12,2) NOT NULL,
-    fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_usuario) REFERENCES tusuario(IdUsuario) ON DELETE CASCADE
-);
-
---
--- Table structure for table `historial_detalle`
---
-
-CREATE TABLE IF NOT EXISTS historial_detalle (
-    id_detalle BIGINT AUTO_INCREMENT PRIMARY KEY,
-    id_compra BIGINT NOT NULL,
-    producto_id BIGINT NOT NULL,
-    cantidad INT NOT NULL,
-    precio DECIMAL(12,2) NOT NULL,
-    FOREIGN KEY (id_compra) REFERENCES historial_compras(id_compra) ON DELETE CASCADE,
-    FOREIGN KEY (producto_id) REFERENCES producto(id_producto)
-);
-
-DELIMITER $$
-CREATE PROCEDURE sp_finalizar_compra(
-    IN p_usuario_id BIGINT
-)
-BEGIN
-    DECLARE v_total DECIMAL(12,2);
-
-    -- Calcular total del carrito
-    SELECT SUM(p.precio * c.cantidad) INTO v_total
-    FROM carrito c
-    JOIN producto p ON p.id_producto = c.producto_id
-    WHERE c.usuario_id = p_usuario_id;
-
-    -- Insertar en historial_compras
-    INSERT INTO historial_compras(id_usuario, total)
-    VALUES (p_usuario_id, v_total);
-
-    -- Insertar cada producto del carrito en historial_detalle
-    INSERT INTO historial_detalle(id_compra, producto_id, cantidad, precio)
-    SELECT LAST_INSERT_ID(), c.producto_id, c.cantidad, p.precio
-    FROM carrito c
-    JOIN producto p ON p.id_producto = c.producto_id
-    WHERE c.usuario_id = p_usuario_id;
-
-    -- Vaciar carrito
-    DELETE FROM carrito WHERE usuario_id = p_usuario_id;
-END $$
-DELIMITER ;
-
-
 --
 -- Dumping routines for database 'octaviusdb'
 --
@@ -497,6 +455,69 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_actualizar_carrito` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_actualizar_carrito`(
+  IN p_carrito_id    INT,
+  IN p_nueva_cantidad INT
+)
+BEGIN
+  UPDATE carrito
+     SET cantidad = p_nueva_cantidad
+   WHERE id = p_carrito_id;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_agregar_carrito1` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_agregar_carrito1`(
+  IN p_usuario_id  BIGINT,
+  IN p_producto_id BIGINT,
+  IN p_cantidad    INT
+)
+BEGIN
+  DECLARE existe INT DEFAULT 0;
+
+  SELECT COUNT(*) 
+    INTO existe
+    FROM carrito
+   WHERE usuario_id  = p_usuario_id
+     AND producto_id = p_producto_id;
+
+  IF existe = 0 THEN
+    INSERT INTO carrito(usuario_id, producto_id, cantidad)
+    VALUES(p_usuario_id, p_producto_id, p_cantidad);
+  ELSE
+    UPDATE carrito
+       SET cantidad = cantidad + p_cantidad
+     WHERE usuario_id  = p_usuario_id
+       AND producto_id = p_producto_id;
+  END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_consulta_categorias` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -569,6 +590,69 @@ BEGIN
   JOIN tipo_servicio ts ON v.id_tipo = ts.id_tipo
   WHERE v.id_usuario = pUser
   ORDER BY v.fecha_hora DESC;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_eliminar_carrito` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_eliminar_carrito`(
+  IN p_carrito_id INT
+)
+BEGIN
+  DELETE FROM carrito
+   WHERE id = p_carrito_id;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_finalizar_compra` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_finalizar_compra`(
+    IN p_usuario_id BIGINT
+)
+BEGIN
+    DECLARE v_total DECIMAL(12,2);
+
+    -- Calcular total del carrito
+    SELECT SUM(p.precio * c.cantidad) INTO v_total
+    FROM carrito c
+    JOIN producto p ON p.id_producto = c.producto_id
+    WHERE c.usuario_id = p_usuario_id;
+
+    -- Insertar en historial_compras
+    INSERT INTO historial_compras(id_usuario, total)
+    VALUES (p_usuario_id, v_total);
+
+    -- Insertar cada producto del carrito en historial_detalle
+    INSERT INTO historial_detalle(id_compra, producto_id, cantidad, precio)
+    SELECT LAST_INSERT_ID(), c.producto_id, c.cantidad, p.precio
+    FROM carrito c
+    JOIN producto p ON p.id_producto = c.producto_id
+    WHERE c.usuario_id = p_usuario_id;
+
+    -- Vaciar carrito
+    DELETE FROM carrito WHERE usuario_id = p_usuario_id;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -656,6 +740,37 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_ver_carrito` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_ver_carrito`(
+  IN p_usuario_id BIGINT
+)
+BEGIN
+  SELECT
+    c.id,
+    p.nombre,
+    p.precio,
+    c.cantidad,
+    (p.precio * c.cantidad) AS subtotal,
+    c.fecha_agregado
+  FROM carrito c
+  JOIN producto p ON p.id_producto = c.producto_id
+  WHERE c.usuario_id = p_usuario_id
+  ORDER BY c.fecha_agregado DESC;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `ValidarCorreo` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -722,4 +837,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-10 17:03:50
+-- Dump completed on 2025-07-23 11:17:16
