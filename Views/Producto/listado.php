@@ -117,3 +117,5 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
   <?php AddJs(); ?>
 </body>
 </html>
+
+//prueba
