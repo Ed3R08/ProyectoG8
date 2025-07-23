@@ -1,5 +1,5 @@
 <?php
-echo "connect cargado correctamente<br>";
+
 
     function OpenDB()
     {
