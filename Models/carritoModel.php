@@ -42,5 +42,26 @@ class CarritoModel {
         $stmt->close();
         CloseDB($conn);
     }
+
+    public static function obtenerHistorial($usuarioId) {
+        $conn = OpenDB();
+        $stmt = $conn->prepare("CALL sp_ver_carrito(?)"); 
+        $stmt->bind_param("i", $usuarioId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $historial = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+        CloseDB($conn);
+        return $historial;
+    }
+
+    public static function finalizarCompra($usuarioId) {
+        $conn = OpenDB();
+        $stmt = $conn->prepare("CALL sp_finalizar_compra(?)");
+        $stmt->bind_param("i", $usuarioId);
+        $stmt->execute();
+        $stmt->close();
+        CloseDB($conn);
+    }
 }
 ?>
