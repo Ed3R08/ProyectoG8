@@ -23,7 +23,7 @@ require_once __DIR__ . '/../layoutInterno.php';
     <div class="page-wrapper">
       <div class="container-fluid">
         <h2>Mi Carrito de Compras</h2>
-        <a href="http://localhost:81/ProyectoG8/Views/Producto/listado.php" class="btn btn-success mb-3">
+        <a href="http://localhost:80/ProyectoG8/Views/Producto/listado.php" class="btn btn-success mb-3">
           Agregar más productos
         </a>
         <table class="table table-bordered">
@@ -65,6 +65,11 @@ require_once __DIR__ . '/../layoutInterno.php';
             <?php endif; ?>
           </tbody>
         </table>
+        <?php if (!empty($carrito)): ?>
+          <form action="../../Controllers/carritoController.php?accion=finalizar" method="POST">
+          <button type="submit" class="btn btn-primary mt-3">Finalizar compra</button>
+        </form>
+        <?php endif; ?>
       </div>
     </div>
   </div>
