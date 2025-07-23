@@ -48,3 +48,40 @@ function RegistrarProductoModel($idCategoria, $nombre, $detalle, $precio, $stock
         return false;
     }
 }
+
+function ActualizarProductoModel($id, $idCategoria, $nombre, $detalle, $precio, $existencias, $ruta_imagen) {
+    try {
+        $cn = OpenDB();
+
+        $idCategoriaEsc = $cn->real_escape_string($idCategoria);
+        $nombreEsc = $cn->real_escape_string($nombre);
+        $detalleEsc = $cn->real_escape_string($detalle);
+        $precioEsc = $cn->real_escape_string($precio);
+        $existenciasEsc = $cn->real_escape_string($existencias);
+        $rutaImagenEsc = $cn->real_escape_string($ruta_imagen);
+
+       $sql = "CALL EditarProducto('$id', '$idCategoriaEsc', '$nombreEsc', '$detalleEsc', '$precioEsc', '$existenciasEsc', '$rutaImagenEsc')";
+        if (!$cn->query($sql)) {
+            throw new Exception("Error MySQL: " . $cn->error);
+        }
+
+        CloseDB($cn);
+        return true;
+    } catch (Exception $error) {
+        RegistrarError($error);
+        echo "<pre>" . $error->getMessage() . "</pre>";  // Mostrar error para debug
+        return false;
+    }
+}
+function EliminarProductoModel($id) {
+    try {
+        $cn = OpenDB();
+        $sql = "CALL EliminarProducto($id)";
+        $ok = $cn->query($sql);
+        CloseDB($cn);
+        return $ok;
+    } catch (Exception $e) {
+        RegistrarError($e);
+        return false;
+    }
+}

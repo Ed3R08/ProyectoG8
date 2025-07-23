@@ -52,3 +52,39 @@ class ProductoController
         require $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/Producto/listado.php';
     }
 }
+
+if (isset($_GET['action']) && $_GET['action'] === 'editar' && isset($_POST['btnEditarProducto'])) {
+    $id = $_POST['id'];
+    $idCategoria = $_POST['idCategoria'];
+    $nombre = $_POST['nombre'];
+    $detalle = $_POST['detalle'];
+    $precio = $_POST['precio'];
+    $existencias = $_POST['existencias'];
+    $ruta_imagen = $_POST['ruta_imagen'];
+
+    $resultado = ActualizarProductoModel($id, $idCategoria, $nombre, $detalle, $precio, $existencias, $ruta_imagen);
+
+    if ($resultado) {
+        header("Location: ../Views/Producto/listado.php?msg=Producto actualizado correctamente");
+        exit();
+    } else {
+        echo "Error al actualizar el producto.";
+    }
+}
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if ($_POST["accion"] === "eliminar") {
+        if (!empty($_POST["id"]) && is_numeric($_POST["id"])) {
+            include_once "../Models/productoModel.php";
+            $id = intval($_POST["id"]);
+            $resultado = EliminarProductoModel($id);
+            if ($resultado) {
+                header("Location: ../Views/Producto/listado.php?msg=eliminado");
+                exit();
+            } else {
+                echo "Error al eliminar el producto.";
+            }
+        } else {
+            echo "ID inválido.";
+        }
+    }
+}
