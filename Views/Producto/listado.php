@@ -88,7 +88,7 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
                     <?php elseif (!isset($_SESSION['Nombre'])): ?>
                       <span class="text-muted">Inicia sesión para comprar</span>
                     <?php else: ?>
-                      <span class="text-muted">No disponible para administradores</span>
+                      <span class="text-muted"></span>
                     <?php endif; ?>
 
                     <?php if (isset($_SESSION['IdRol']) && $_SESSION['IdRol'] == 2): ?>
