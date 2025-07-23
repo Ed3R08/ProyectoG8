@@ -49,4 +49,12 @@ switch ($accion) {
     default:
         header("Location: ../Views/Home/principal.php");
         break;
+
+    case 'finalizar':
+        if ($usuario_id) {
+            CarritoModel::finalizarCompra($usuario_id);
+            header("Location: ../Views/Carrito/historial.php");
+            exit();
+        }
+        break;
 }
