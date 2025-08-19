@@ -80,7 +80,7 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
                   <td>
                     <?php
                     if (isset($_SESSION['Nombre']) && isset($_SESSION['IdRol']) && $_SESSION['IdRol'] != 2): ?>
-                      <form action="http://localhost:81/ProyectoG8/Controllers/carritoController.php?accion=agregar" method="POST">
+                      <form action="http://localhost:80/ProyectoG8/Controllers/carritoController.php?accion=agregar" method="POST">
                         <input type="hidden" name="producto_id" value="<?= $p['id_producto'] ?>">
                         <input type="number" name="cantidad" value="1" min="1" class="form-control" style="width:60px; display:inline;">
                         <button type="submit" class="btn btn-sm btn-primary">Agregar</button>
@@ -88,7 +88,7 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
                     <?php elseif (!isset($_SESSION['Nombre'])): ?>
                       <span class="text-muted">Inicia sesión para comprar</span>
                     <?php else: ?>
-                      <span class="text-muted">No disponible para administradores</span>
+                      <span class="text-muted"></span>
                     <?php endif; ?>
 
                     <?php if (isset($_SESSION['IdRol']) && $_SESSION['IdRol'] == 2): ?>

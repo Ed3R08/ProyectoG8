@@ -10,13 +10,13 @@
     ?>
 <body>
     <div class="main-wrapper">
-        <div class="auth-wrapper d-flex no-block justify-content-center align-items-center" style="background:url(../Imagenes/auth-bg.jpg) no-repeat center center;">
+        <div class="auth-wrapper d-flex no-block justify-content-center align-items-center" style="background:url(../Imagenes/auth-bg.png) no-repeat center center;">
             <div class="auth-box">
                 <div id="loginform">
 
                     <div class="logo mb-3">
-                        <span class="db"><img src="../Imagenes/logo-icon.png" alt="logo" /></span>
-                        <h5 class="font-medium m-b-20">Iniciar Sesión</h5>
+                        <span class="db"><img src="../Imagenes/logo-icon.jpg" alt="logo" /></span>
+                        <h5 class="font-medium m-b-20">Inicio de Sesión</h5>
                     </div>
 
                     <div class="row">
@@ -47,16 +47,16 @@
 
                                 <div class="form-group text-center">
                                     <div class="col-xs-12 p-b-20">
-                                        <button id="btnIniciarSesion" name="btnIniciarSesion" class="btn btn-block btn-lg btn-info" type="submit">Procesar</button>
+                                        <button id="btnIniciarSesion" name="btnIniciarSesion" class="btn btn-block btn-lg btn-info" type="submit">Ingresar</button>
                                     </div>
                                 </div>
 
                                 <div class="form-group m-b-0 m-t-10">
                                     <div class="col-sm-12 text-center">
-                                        Si no tienes una cuenta <a href="registro.php" class="text-info m-l-5"><b>Regístrate</b></a>
+                                        Si no tienes una cuenta <a href="registro.php" class="text-info m-l-5"><b>Click aquí</b></a>
                                     </div>
                                     <div class="col-sm-12 text-center">
-                                        Si olvidaste la contraseña <a href="recuperarAcceso.php" class="text-info m-l-5"><b>Recupera el Acceso</b></a>
+                                        Olvidaste tu contraseña <a href="recuperarAcceso.php" class="text-info m-l-5"><b>Click aquí</b></a>
                                     </div>
                                 </div>
 

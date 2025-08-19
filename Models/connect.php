@@ -3,7 +3,7 @@
 
     function OpenDB()
     {
-        return mysqli_connect("127.0.0.1:3307","root","","proyecto");
+        return mysqli_connect("127.0.0.1:3307","root","","octaviusdb");
     }
 
     function CloseDB($context)

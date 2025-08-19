@@ -1,29 +1,26 @@
 <?php
-    include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Controllers/homeController.php';
+include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Controllers/homeController.php';
 
-    if(session_status() == PHP_SESSION_NONE)
-    {
-        session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+function ShowHeader()
+{
+    $nombreUsuario = "";
+    $nombreRol = "";
+
+    if (isset($_SESSION["Nombre"])) {
+        $nombreUsuario = $_SESSION["Nombre"];
     }
 
-    function ShowHeader()
-    {
-        $nombreUsuario = "";
-        $nombreRol = "";
-
-        if(isset($_SESSION["Nombre"]))
-        {
-           $nombreUsuario = $_SESSION["Nombre"];
-        }
-
-        if(isset($_SESSION["NombreRol"]))
-        {
-           $nombreRol = $_SESSION["NombreRol"];
-        }
+    if (isset($_SESSION["NombreRol"])) {
+        $nombreRol = $_SESSION["NombreRol"];
+    }
 
 
-        echo 
-            '<header class="topbar">
+    echo
+        '<header class="topbar">
                 <nav class="navbar top-navbar navbar-expand-md navbar-dark">
                     <div class="navbar-header">
                         <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)">
@@ -32,12 +29,11 @@
                         <div class="navbar-brand">
                             <a href="../Home/principal.php" class="logo">
                                 <b class="logo-icon">
-                                    <img src="../Imagenes/logo-icon.png" alt="homepage" class="dark-logo" />
-                                    <img src="../Imagenes/logo-light-icon.png" alt="homepage" class="light-logo" />
+                                    <img src="../Imagenes/logo-text.png" alt="homepage" class="dark-logo" />
+                                    <img src="../Imagenes/logo-text.png" alt="homepage" class="light-logo" />
                                 </b>
                                 <span class="logo-text">
                                     <img src="../Imagenes/logo-text.png" alt="homepage" class="dark-logo" />
-                                    <img src="../Imagenes/logo-light-text.png" class="light-logo" alt="homepage" />
                                 </span>
                             </a>
                             <a class="sidebartoggler d-none d-md-block" href="javascript:void(0)" data-sidebartype="mini-sidebar">
@@ -97,17 +93,17 @@
                     </div>
                 </nav>
             </header>';
-    }
+}
 
-    function ShowFooter()
-    {
-        echo 
-            '<footer class="footer text-center">
-                Derechos Reservados © OCTAVIUS
+function ShowFooter()
+{
+    echo
+        '<footer class="footer text-center">
+                Derechos Reservados © OCTAVIUS POOL & SUPPLIES
             </footer>';
-    }
+}
 
-    function ShowMenu()
+function ShowMenu()
 {
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
@@ -156,6 +152,12 @@
                   <i class="fa fa-list-alt"></i><span class="hide-menu">Lista de Productos</span>
                 </a>
               </li>';
+              echo '<li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                   href="../Carrito/historial.php" aria-expanded="false">
+                  <i class="fa fa-file-text-o" aria-hidden="true"></i></i><span class="hide-menu">Historial de compras</span>
+                </a>
+              </li>';
     } else {
         // *** USUARIO REGULAR (cualquier otro IdRol) ***
         echo '<li class="sidebar-item">
@@ -170,6 +172,18 @@
                   <i class="fa fa-list-alt"></i><span class="hide-menu">Lista de Productos</span>
                 </a>
               </li>';
+        echo '<li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                   href="../Carrito/verCarrito.php" aria-expanded="false">
+                  <i class="fa fa-shopping-cart" aria-hidden="true"></i><span class="hide-menu">Carrito de compras</span>
+                </a>
+              </li>';
+              echo '<li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                   href="../Carrito/historial.php" aria-expanded="false">
+                  <i class="fa fa-file-text-o" aria-hidden="true"></i></i><span class="hide-menu">Historial de compras</span>
+                </a>
+              </li>';
     }
 
     echo '    </ul>
@@ -181,10 +195,10 @@
 
 
 
-    function AddCss()
-    {
-        echo 
-            '<head>
+function AddCss()
+{
+    echo
+        '<head>
                 <meta charset="utf-8">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -194,12 +208,12 @@
                 <link href="../Estilos/style.css" rel="stylesheet">
                 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
             </head>';
-    }
+}
 
-    function AddJs()
-    {
-        echo 
-            '<script src="../Funciones/jquery.min.js"></script>
+function AddJs()
+{
+    echo
+        '<script src="../Funciones/jquery.min.js"></script>
             <script src="../Funciones/popper.min.js"></script>
             <script src="../Funciones/bootstrap.min.js"></script>
             <script src="../Funciones/app.min.js"></script>
@@ -211,6 +225,6 @@
             <script src="../Funciones/sidebarmenu.js"></script>
             <script src="../Funciones/custom.min.js"></script>
             <script src="../Funciones/comunes.js"></script>';
-    }
+}
 
 ?>
