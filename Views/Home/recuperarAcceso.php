@@ -10,12 +10,12 @@
     ?>
 <body>
     <div class="main-wrapper">
-        <div class="auth-wrapper d-flex no-block justify-content-center align-items-center" style="background:url(../Imagenes/auth-bg.jpg) no-repeat center center;">
+        <div class="auth-wrapper d-flex no-block justify-content-center align-items-center" style="background:url(../Imagenes/auth-bg.png) no-repeat center center;">
             <div class="auth-box">
                 <div id="loginform">
 
                     <div class="logo mb-3">
-                        <span class="db"><img src="../Imagenes/logo-icon.png" alt="logo" /></span>
+                        <span class="db"><img src="../Imagenes/logo-icon.jpg" alt="logo" /></span>
                         <h5 class="font-medium m-b-20">Recuperar Acceso</h5>
                     </div>
 
