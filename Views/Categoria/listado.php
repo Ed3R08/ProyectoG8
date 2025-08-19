@@ -13,9 +13,11 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
 <!DOCTYPE html>
 <html lang="es">
 <?php AddCss(); ?>
+
 <body>
   <div id="main-wrapper">
-    <?php ShowHeader(); ShowMenu(); ?>
+    <?php ShowHeader();
+    ShowMenu(); ?>
     <div class="page-wrapper">
       <div class="container-fluid">
         <h3>Lista de Categorías</h3>
@@ -32,7 +34,7 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
           </thead>
           <tbody>
             <?php if (!empty($categorias)): ?>
-              <?php foreach($categorias as $c): ?>
+              <?php foreach ($categorias as $c): ?>
                 <tr>
                   <td><?= $c['id_categoria'] ?></td>
                   <td><?= htmlspecialchars($c['descripcion']) ?></td>
@@ -43,13 +45,11 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
                   </td>
                   <?php if (isset($_SESSION['IdRol']) && $_SESSION['IdRol'] == 2): ?>
                     <td>
-                      <a href="/ProyectoG8/Views/Categoria/editarCategoria.php?id=<?= $c['id_categoria'] ?>" 
-                         class="btn btn-sm btn-primary">Editar</a>
+                      <a href="/ProyectoG8/Views/Categoria/editarCategoria.php?id=<?= $c['id_categoria'] ?>"
+                        class="btn btn-sm btn-primary">Editar</a>
 
-                      <form method="post" 
-                            action="../../Controllers/categoriaController.php" 
-                            style="display:inline-block" 
-                            onsubmit="return confirm('¿Desea eliminar esta categoría?');">
+                      <form method="post" action="../../Controllers/categoriaController.php" style="display:inline-block"
+                        onsubmit="return confirm('¿Desea eliminar esta categoría?');">
                         <input type="hidden" name="id" value="<?= $c['id_categoria'] ?>">
                         <input type="hidden" name="accion" value="eliminar">
                         <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
@@ -68,6 +68,7 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
       </div>
     </div>
   </div>
-<?php AddJs(); ?>
+  <?php AddJs(); ?>
 </body>
+
 </html>

@@ -1,6 +1,6 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+  session_start();
 }
 
 include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/productoModel.php';
@@ -9,15 +9,16 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/productoModel.php';
 $productos = ListarProductosModel();
 
 // Función para filtrar productos por precio en PHP puro
-function filtrarProductosPorPrecio($productos, $min = 0, $max = PHP_INT_MAX) {
-    $filtrados = [];
-    foreach ($productos as $p) {
-        $precio = floatval($p['precio']);
-        if ($precio >= $min && $precio <= $max) {
-            $filtrados[] = $p;
-        }
+function filtrarProductosPorPrecio($productos, $min = 0, $max = PHP_INT_MAX)
+{
+  $filtrados = [];
+  foreach ($productos as $p) {
+    $precio = floatval($p['precio']);
+    if ($precio >= $min && $precio <= $max) {
+      $filtrados[] = $p;
     }
-    return $filtrados;
+  }
+  return $filtrados;
 }
 
 // Obtener los valores mínimos y máximos de precio desde el formulario (GET)
@@ -33,9 +34,11 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
 <!DOCTYPE html>
 <html lang="es">
 <?php AddCss(); ?>
+
 <body>
   <div id="main-wrapper">
-    <?php ShowHeader(); ShowMenu(); ?>
+    <?php ShowHeader();
+    ShowMenu(); ?>
     <div class="page-wrapper">
       <div class="container-fluid">
 
@@ -47,10 +50,12 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
           <input type="number" step="0.01" name="min" id="min" value="<?= htmlspecialchars($min) ?>" placeholder="0">
 
           <label for="max" style="margin-left: 10px;">Precio máximo:</label>
-          <input type="number" step="0.01" name="max" id="max" value="<?= $max !== PHP_INT_MAX ? htmlspecialchars($max) : '' ?>" placeholder="Sin límite">
+          <input type="number" step="0.01" name="max" id="max"
+            value="<?= $max !== PHP_INT_MAX ? htmlspecialchars($max) : '' ?>" placeholder="Sin límite">
 
           <button type="submit" class="btn btn-primary btn-sm" style="margin-left: 10px;">Filtrar</button>
-          <a href="<?= strtok($_SERVER["REQUEST_URI"], '?') ?>" class="btn btn-secondary btn-sm" style="margin-left: 5px;">Limpiar filtro</a>
+          <a href="<?= strtok($_SERVER["REQUEST_URI"], '?') ?>" class="btn btn-secondary btn-sm"
+            style="margin-left: 5px;">Limpiar filtro</a>
         </form>
 
         <table class="table table-striped">
@@ -66,7 +71,7 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
           </thead>
           <tbody>
             <?php if (!empty($productosFiltrados)): ?>
-              <?php foreach($productosFiltrados as $p): ?>
+              <?php foreach ($productosFiltrados as $p): ?>
                 <tr>
                   <td><?= $p['id_producto'] ?></td>
                   <td><?= htmlspecialchars($p['nombre']) ?></td>
@@ -80,9 +85,11 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
                   <td>
                     <?php
                     if (isset($_SESSION['Nombre']) && isset($_SESSION['IdRol']) && $_SESSION['IdRol'] != 2): ?>
-                      <form action="http://localhost:80/ProyectoG8/Controllers/carritoController.php?accion=agregar" method="POST">
+                      <form action="http://localhost:80/ProyectoG8/Controllers/carritoController.php?accion=agregar"
+                        method="POST">
                         <input type="hidden" name="producto_id" value="<?= $p['id_producto'] ?>">
-                        <input type="number" name="cantidad" value="1" min="1" class="form-control" style="width:60px; display:inline;">
+                        <input type="number" name="cantidad" value="1" min="1" class="form-control"
+                          style="width:60px; display:inline;">
                         <button type="submit" class="btn btn-sm btn-primary">Agregar</button>
                       </form>
                     <?php elseif (!isset($_SESSION['Nombre'])): ?>
@@ -92,12 +99,14 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
                     <?php endif; ?>
 
                     <?php if (isset($_SESSION['IdRol']) && $_SESSION['IdRol'] == 2): ?>
-                      <a href="/ProyectoG8/Views/Producto/editar.php?id=<?= $p['id_producto'] ?>" class="btn btn-sm btn-danger">Editar</a>
-                       <form method="post" action="../../Controllers/productoController.php" style="display:inline-block" onsubmit="return confirm('¿Desea eliminar este producto?');">
-    <input type="hidden" name="id" value="<?= $p['id_producto'] ?>">
-    <input type="hidden" name="accion" value="eliminar">
-    <button type="submit" class="btn btn-danger">Eliminar</button>
-</form>
+                      <a href="/ProyectoG8/Views/Producto/editar.php?id=<?= $p['id_producto'] ?>"
+                        class="btn btn-sm btn-danger">Editar</a>
+                      <form method="post" action="../../Controllers/productoController.php" style="display:inline-block"
+                        onsubmit="return confirm('¿Desea eliminar este producto?');">
+                        <input type="hidden" name="id" value="<?= $p['id_producto'] ?>">
+                        <input type="hidden" name="accion" value="eliminar">
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                      </form>
                     <?php endif; ?>
                   </td>
                 </tr>
@@ -116,6 +125,7 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
 
   <?php AddJs(); ?>
 </body>
+
 </html>
 
 //prueba

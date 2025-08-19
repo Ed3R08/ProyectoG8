@@ -1,29 +1,28 @@
 <?php
-    include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
-    include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Controllers/usuarioController.php';
+include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
+include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Controllers/usuarioController.php';
 
-    if(session_status() == PHP_SESSION_NONE)
-    {
-        session_start();
-    }
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
-    $idUsuario = $_SESSION["IdUsuario"];
-    $resultado = ConsultarInfoUsuario($idUsuario);
+$idUsuario = $_SESSION["IdUsuario"];
+$resultado = ConsultarInfoUsuario($idUsuario);
 ?>
 
 <!DOCTYPE html>
 <html>
 <?php
-       AddCss();
-    ?>
+AddCss();
+?>
 
 <body>
 
     <div id="main-wrapper">
 
         <?php
-            ShowHeader();
-            ShowMenu();
+        ShowHeader();
+        ShowMenu();
         ?>
 
         <div class="page-wrapper">
@@ -40,40 +39,44 @@
                                 <div class="card-body">
 
                                     <?php
-                                        if(isset($_POST["txtMensaje"]))
-                                        {
-                                            echo '<div class="alert alert-warning text-center">' . $_POST["txtMensaje"] . '</div>';
-                                        }
+                                    if (isset($_POST["txtMensaje"])) {
+                                        echo '<div class="alert alert-warning text-center">' . $_POST["txtMensaje"] . '</div>';
+                                    }
                                     ?>
 
                                     <div class="form-group row">
-                                        <label class="col-sm-3 text-right control-label col-form-label">Identificación</label>
+                                        <label
+                                            class="col-sm-3 text-right control-label col-form-label">Identificación</label>
                                         <div class="col-lg-7">
-                                            <input id="txtIdentificacion" name="txtIdentificacion" type="text" class="form-control form-control-lg"
-                                            value="<?php echo $resultado["Identificacion"] ?>" 
-                                            onkeyup="ConsultarNombreApi()">
+                                            <input id="txtIdentificacion" name="txtIdentificacion" type="text"
+                                                class="form-control form-control-lg"
+                                                value="<?php echo $resultado["Identificacion"] ?>"
+                                                onkeyup="ConsultarNombreApi()">
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
                                         <label class="col-sm-3 text-right control-label col-form-label">Nombre</label>
                                         <div class="col-md-7">
-                                            <input id="txtNombre" name="txtNombre" type="text" class="form-control form-control-lg"
-                                            value="<?php echo $resultado["Nombre"] ?>">
+                                            <input id="txtNombre" name="txtNombre" type="text"
+                                                class="form-control form-control-lg"
+                                                value="<?php echo $resultado["Nombre"] ?>">
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
                                         <label class="col-sm-3 text-right control-label col-form-label">Correo</label>
                                         <div class="col-md-7">
-                                            <input id="txtCorreo" name="txtCorreo" type="email" class="form-control form-control-lg"
-                                            value="<?php echo $resultado["Correo"] ?>">
+                                            <input id="txtCorreo" name="txtCorreo" type="email"
+                                                class="form-control form-control-lg"
+                                                value="<?php echo $resultado["Correo"] ?>">
                                         </div>
                                     </div>
 
-                                     <div class="row">
+                                    <div class="row">
                                         <div class="col-md-10 text-right pb-2">
-                                            <button id="btnActualizarPerfilUsuario" name="btnActualizarPerfilUsuario" class="btn btn-lg btn-info" type="submit">Procesar</button>
+                                            <button id="btnActualizarPerfilUsuario" name="btnActualizarPerfilUsuario"
+                                                class="btn btn-lg btn-info" type="submit">Procesar</button>
                                         </div>
                                     </div>
 
@@ -87,7 +90,7 @@
             </div>
 
             <?php
-                ShowFooter();
+            ShowFooter();
             ?>
 
         </div>
@@ -95,7 +98,7 @@
     </div>
 
     <?php
-        AddJs();
+    AddJs();
     ?>
 
 </body>

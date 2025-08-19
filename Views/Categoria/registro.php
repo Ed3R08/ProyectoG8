@@ -5,16 +5,18 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
 
 // Si llega POST, delega al controlador
 if (isset($_POST['btnGuardar'])) {
-    CategoriaController::store();
-    exit;
+  CategoriaController::store();
+  exit;
 }
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <?php AddCss(); ?>
+
 <body>
-<div id="main-wrapper">
-    <?php ShowHeader(); ShowMenu(); ?>
+  <div id="main-wrapper">
+    <?php ShowHeader();
+    ShowMenu(); ?>
     <div class="page-wrapper">
       <div class="container-fluid">
         <h3>Registrar Categoría</h3>
@@ -38,7 +40,8 @@ if (isset($_POST['btnGuardar'])) {
         </form>
       </div>
     </div>
-</div>
-<?php AddJs(); ?>
+  </div>
+  <?php AddJs(); ?>
 </body>
+
 </html>

@@ -2,8 +2,8 @@
 // 0) Procesar POST llamando al controlador
 include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Controllers/ProductoController.php';
 if (isset($_POST['btnGuardar'])) {
-    ProductoController::store();
-    exit;
+  ProductoController::store();
+  exit;
 }
 
 // 1) Cargar el modelo de categorías para el dropdown
@@ -16,19 +16,21 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
 <!DOCTYPE html>
 <html lang="es">
 <?php AddCss(); ?>
+
 <body>
   <div id="main-wrapper">
-    <?php ShowHeader(); ShowMenu(); ?>
+    <?php ShowHeader();
+    ShowMenu(); ?>
     <div class="page-wrapper">
       <div class="container-fluid">
         <h3>Registrar Producto</h3>
 
         <!-- Mensajes de éxito o error -->
         <?php if (isset($_GET['ok'])): ?>
-          <div class="alert alert-<?= $_GET['ok']==1 ? 'success' : 'danger' ?>">
-            <?= $_GET['ok']==1 
-               ? 'Producto registrado correctamente.'
-               : 'Error al registrar el producto.' ?>
+          <div class="alert alert-<?= $_GET['ok'] == 1 ? 'success' : 'danger' ?>">
+            <?= $_GET['ok'] == 1
+              ? 'Producto registrado correctamente.'
+              : 'Error al registrar el producto.' ?>
           </div>
         <?php endif; ?>
 
@@ -37,7 +39,7 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
             <label>Categoría</label>
             <select name="categoria" class="form-control" required>
               <option value="">Seleccione…</option>
-              <?php foreach($categorias as $c): ?>
+              <?php foreach ($categorias as $c): ?>
                 <option value="<?= $c['id_categoria'] ?>">
                   <?= htmlspecialchars($c['descripcion']) ?>
                 </option>
@@ -69,6 +71,7 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
       </div>
     </div>
   </div>
-<?php AddJs(); ?>
+  <?php AddJs(); ?>
 </body>
+
 </html>

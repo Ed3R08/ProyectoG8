@@ -34,7 +34,7 @@ class CategoriaController
         require $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/Categoria/listado.php';
     }
 
-    
+
 }
 if (isset($_GET['action']) && $_GET['action'] === 'editar' && isset($_POST['btnEditarCategoria'])) {
     $id = $_POST['id'];

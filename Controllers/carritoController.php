@@ -44,10 +44,10 @@ switch ($accion) {
         }
         header("Location: ../Views/Carrito/verCarrito.php");
         break;
-    
+
     case 'finalizar':
         if ($usuario_id) {
-            
+
             $idFactura = CarritoModel::finalizarCompra($usuario_id);
 
             header("Location: ../Views/Carrito/factura.php?id=" . $idFactura);

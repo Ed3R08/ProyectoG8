@@ -1,7 +1,8 @@
 <?php
 include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/connect.php';
 
-function ListarProductosModel($idCategoria = null) {
+function ListarProductosModel($idCategoria = null)
+{
     try {
         $cn = OpenDB();
         if ($idCategoria !== null) {
@@ -23,15 +24,16 @@ function ListarProductosModel($idCategoria = null) {
     }
 }
 
-function RegistrarProductoModel($idCategoria, $nombre, $detalle, $precio, $stock, $rutaImagen) {
+function RegistrarProductoModel($idCategoria, $nombre, $detalle, $precio, $stock, $rutaImagen)
+{
     try {
         $cn = OpenDB();
-        $catEsc    = $cn->real_escape_string($idCategoria);
+        $catEsc = $cn->real_escape_string($idCategoria);
         $nombreEsc = $cn->real_escape_string($nombre);
-        $detEsc    = $cn->real_escape_string($detalle);
+        $detEsc = $cn->real_escape_string($detalle);
         $precioEsc = $cn->real_escape_string($precio);
-        $stkEsc    = $cn->real_escape_string($stock);
-        $imgEsc    = $cn->real_escape_string($rutaImagen);
+        $stkEsc = $cn->real_escape_string($stock);
+        $imgEsc = $cn->real_escape_string($rutaImagen);
         $sql = "CALL sp_insert_producto(
             $catEsc,
             '$nombreEsc',
@@ -49,7 +51,8 @@ function RegistrarProductoModel($idCategoria, $nombre, $detalle, $precio, $stock
     }
 }
 
-function ActualizarProductoModel($id, $idCategoria, $nombre, $detalle, $precio, $existencias, $ruta_imagen) {
+function ActualizarProductoModel($id, $idCategoria, $nombre, $detalle, $precio, $existencias, $ruta_imagen)
+{
     try {
         $cn = OpenDB();
 
@@ -60,7 +63,7 @@ function ActualizarProductoModel($id, $idCategoria, $nombre, $detalle, $precio, 
         $existenciasEsc = $cn->real_escape_string($existencias);
         $rutaImagenEsc = $cn->real_escape_string($ruta_imagen);
 
-       $sql = "CALL EditarProducto('$id', '$idCategoriaEsc', '$nombreEsc', '$detalleEsc', '$precioEsc', '$existenciasEsc', '$rutaImagenEsc')";
+        $sql = "CALL EditarProducto('$id', '$idCategoriaEsc', '$nombreEsc', '$detalleEsc', '$precioEsc', '$existenciasEsc', '$rutaImagenEsc')";
         if (!$cn->query($sql)) {
             throw new Exception("Error MySQL: " . $cn->error);
         }
@@ -73,7 +76,8 @@ function ActualizarProductoModel($id, $idCategoria, $nombre, $detalle, $precio, 
         return false;
     }
 }
-function EliminarProductoModel($id) {
+function EliminarProductoModel($id)
+{
     try {
         $cn = OpenDB();
         $sql = "CALL EliminarProducto($id)";

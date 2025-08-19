@@ -152,7 +152,7 @@ function ShowMenu()
                   <i class="fa fa-list-alt"></i><span class="hide-menu">Lista de Productos</span>
                 </a>
               </li>';
-              echo '<li class="sidebar-item">
+        echo '<li class="sidebar-item">
                 <a class="sidebar-link waves-effect waves-dark sidebar-link"
                    href="../Carrito/historial.php" aria-expanded="false">
                   <i class="fa fa-file-text-o" aria-hidden="true"></i></i><span class="hide-menu">Historial de compras</span>
@@ -178,7 +178,7 @@ function ShowMenu()
                   <i class="fa fa-shopping-cart" aria-hidden="true"></i><span class="hide-menu">Carrito de compras</span>
                 </a>
               </li>';
-              echo '<li class="sidebar-item">
+        echo '<li class="sidebar-item">
                 <a class="sidebar-link waves-effect waves-dark sidebar-link"
                    href="../Carrito/historial.php" aria-expanded="false">
                   <i class="fa fa-file-text-o" aria-hidden="true"></i></i><span class="hide-menu">Historial de compras</span>
@@ -207,7 +207,9 @@ function AddCss()
                 <title>Tienda Octavius</title>
                 <link href="../Estilos/style.css" rel="stylesheet">
                 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
-            </head>';
+                <link rel="icon" type="image/png" sizes="32x32" href="../Imagenes/favicon.png">
+            
+                </head>';
 }
 
 function AddJs()

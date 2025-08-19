@@ -1,26 +1,26 @@
 <?php
 
 
-    function OpenDB()
-    {
-        return mysqli_connect("127.0.0.1:3307","root","","octaviusdb");
-    }
+function OpenDB()
+{
+    return mysqli_connect("127.0.0.1:3307", "root", "", "octaviusdb");
+}
 
-    function CloseDB($context)
-    {
-        mysqli_close($context);
-    }
+function CloseDB($context)
+{
+    mysqli_close($context);
+}
 
-    function RegistrarError($error)
-    {
-        $context = OpenDB();
-           
-        $message = mysqli_real_escape_string($context, $error -> getMessage());
+function RegistrarError($error)
+{
+    $context = OpenDB();
 
-        $sp = "CALL RegistrarError('$message')";
-        $context -> query($sp);
+    $message = mysqli_real_escape_string($context, $error->getMessage());
 
-        CloseDB($context);
-    }
+    $sp = "CALL RegistrarError('$message')";
+    $context->query($sp);
+
+    CloseDB($context);
+}
 
 ?>

@@ -4,8 +4,8 @@ session_start();
 
 // Validar sesión y que no sea administrador (IdRol == 2)
 if (!isset($_SESSION['IdUsuario']) || !isset($_SESSION['IdRol']) || $_SESSION['IdRol'] == 2) {
-    header("Location: ../Home/login.php");
-    exit();
+  header("Location: ../Home/login.php");
+  exit();
 }
 
 $usuarioId = $_SESSION['IdUsuario'];
@@ -17,9 +17,11 @@ require_once __DIR__ . '/../layoutInterno.php';
 <!DOCTYPE html>
 <html lang="es">
 <?php AddCss(); ?>
+
 <body>
   <div id="main-wrapper">
-    <?php ShowHeader(); ShowMenu(); ?>
+    <?php ShowHeader();
+    ShowMenu(); ?>
     <div class="page-wrapper">
       <div class="container-fluid">
         <h2>Mi Carrito de Compras</h2>
@@ -45,7 +47,8 @@ require_once __DIR__ . '/../layoutInterno.php';
                   <td>
                     <form action="../../Controllers/carritoController.php?accion=actualizar" method="POST">
                       <input type="hidden" name="carrito_id" value="<?= $item['id'] ?>">
-                      <input type="number" name="nueva_cantidad" value="<?= $item['cantidad'] ?>" min="1" class="form-control" style="width:70px;">
+                      <input type="number" name="nueva_cantidad" value="<?= $item['cantidad'] ?>" min="1"
+                        class="form-control" style="width:70px;">
                       <button type="submit" class="btn btn-sm btn-success mt-1">Actualizar</button>
                     </form>
                   </td>
@@ -67,12 +70,13 @@ require_once __DIR__ . '/../layoutInterno.php';
         </table>
         <?php if (!empty($carrito)): ?>
           <form action="../../Controllers/carritoController.php?accion=finalizar" method="POST">
-          <button type="submit" class="btn btn-primary mt-3">Finalizar compra</button>
-        </form>
+            <button type="submit" class="btn btn-primary mt-3">Finalizar compra</button>
+          </form>
         <?php endif; ?>
       </div>
     </div>
   </div>
-<?php AddJs(); ?>
+  <?php AddJs(); ?>
 </body>
+
 </html>

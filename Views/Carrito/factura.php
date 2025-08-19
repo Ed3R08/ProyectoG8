@@ -51,29 +51,30 @@ CloseDB($conn);
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Factura #<?php echo $idCompra; ?></title>
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f4f6f9;
             display: flex;
             justify-content: center;
             padding: 40px;
         }
 
-        .ticket { 
+        .ticket {
             background: #fff;
             border-radius: 12px;
-            box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
             padding: 25px;
             width: 480px;
         }
 
-        h2 { 
-            text-align: center; 
-            margin-bottom: 10px; 
+        h2 {
+            text-align: center;
+            margin-bottom: 10px;
             color: #333;
         }
 
@@ -87,23 +88,23 @@ CloseDB($conn);
             margin: 5px 0;
         }
 
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
+        table {
+            width: 100%;
+            border-collapse: collapse;
             margin-top: 10px;
         }
 
-        th { 
+        th {
             background: #4c90afff;
-            color: white; 
-            padding: 10px; 
+            color: white;
+            padding: 10px;
             font-size: 14px;
         }
 
-        td { 
-            border-bottom: 1px solid #ddd; 
-            padding: 8px; 
-            text-align: center; 
+        td {
+            border-bottom: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
             font-size: 13px;
         }
 
@@ -118,7 +119,7 @@ CloseDB($conn);
         }
 
         .boton {
-            margin-top: 20px; 
+            margin-top: 20px;
             text-align: center;
         }
 
@@ -136,6 +137,7 @@ CloseDB($conn);
         }
     </style>
 </head>
+
 <body>
     <div class="ticket">
         <h2>Factura #<?php echo $idCompra; ?></h2>
@@ -154,15 +156,15 @@ CloseDB($conn);
                 </tr>
             </thead>
             <tbody>
-                <?php 
+                <?php
                 $total = 0;
                 while ($row = $detalles->fetch_assoc()) {
                     $total += $row['subtotal'];
                     echo "<tr>
                             <td>{$row['producto']}</td>
                             <td>{$row['cantidad']}</td>
-                            <td>₡".number_format($row['precio'], 2)."</td>
-                            <td>₡".number_format($row['subtotal'], 2)."</td>
+                            <td>₡" . number_format($row['precio'], 2) . "</td>
+                            <td>₡" . number_format($row['subtotal'], 2) . "</td>
                           </tr>";
                 }
                 ?>
@@ -180,4 +182,5 @@ CloseDB($conn);
         </div>
     </div>
 </body>
+
 </html

@@ -12,7 +12,7 @@
             background-color: #fff;
             padding: 25px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             max-width: 600px;
             margin: auto;
         }
@@ -38,7 +38,7 @@
 
 <body>
     <div id="main-wrapper">
-      
+
         <header class="topbar">
             <nav class="navbar top-navbar navbar-expand-md navbar-dark">
                 <div class="navbar-header">
@@ -57,8 +57,7 @@
                     </div>
                     <a class="topbartoggler d-block d-md-none waves-effect waves-light" href="javascript:void(0)"
                         data-toggle="collapse" data-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false"
-                        aria-label="Toggle navigation">
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <i class="ti-more"></i>
                     </a>
                 </div>
@@ -68,15 +67,17 @@
                     </ul>
                     <ul class="navbar-nav float-right">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle waves-effect waves-dark pro-pic" href="#" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle waves-effect waves-dark pro-pic" href="#"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <img src="../Imagenes/2.jpg" alt="usuario" class="rounded-circle" width="40">
-                                <span class="m-l-5 font-medium d-none d-sm-inline-block">Carlos Gomez Castillo  <i class="mdi mdi-chevron-down"></i></span>
+                                <span class="m-l-5 font-medium d-none d-sm-inline-block">Carlos Gomez Castillo <i
+                                        class="mdi mdi-chevron-down"></i></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
                                 <span class="with-arrow"><span class="bg-primary"></span></span>
                                 <div class="d-flex no-block align-items-center p-15 bg-primary text-white m-b-10">
-                                    <div><img src="../Imagenes/2.jpg" alt="user" class="rounded-circle" width="60"></div>
+                                    <div><img src="../Imagenes/2.jpg" alt="user" class="rounded-circle" width="60">
+                                    </div>
                                     <div class="m-l-10">
                                         <h4 class="m-b-0">Carlos Gomez Castillo</h4>
                                         <p class=" m-b-0">carlosgo@gmail.com</p>
@@ -95,13 +96,14 @@
             </nav>
         </header>
 
-      
+
         <aside class="left-sidebar">
             <div class="scroll-sidebar">
                 <nav class="sidebar-nav">
                     <ul id="sidebarnav">
                         <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="principal.php" aria-expanded="false">
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="principal.php"
+                                aria-expanded="false">
                                 <i class="ti-loop"></i><span class="hide-menu">Volver al inicio</span>
                             </a>
                         </li>
@@ -110,7 +112,7 @@
             </div>
         </aside>
 
-   
+
         <div class="page-wrapper">
             <div class="page-breadcrumb">
                 <div class="row">
@@ -136,7 +138,7 @@
         </div>
     </div>
 
-   
+
     <script src="../Funciones/jquery.min.js"></script>
     <script src="../Funciones/popper.min.js"></script>
     <script src="../Funciones/bootstrap.min.js"></script>
