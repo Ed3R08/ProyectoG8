@@ -22,7 +22,12 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
         <table class="table table-striped">
           <thead>
             <tr>
-              <th>ID</th><th>Descripción</th><th>Imagen</th>
+              <th>ID</th>
+              <th>Descripción</th>
+              <th>Imagen</th>
+              <?php if (isset($_SESSION['IdRol']) && $_SESSION['IdRol'] == 2): ?>
+                <th>Acciones</th>
+              <?php endif; ?>
             </tr>
           </thead>
           <tbody>
@@ -36,11 +41,26 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
                       <img src="<?= $c['ruta_imagen'] ?>" alt="" style="height:40px">
                     <?php endif; ?>
                   </td>
+                  <?php if (isset($_SESSION['IdRol']) && $_SESSION['IdRol'] == 2): ?>
+                    <td>
+                      <a href="/ProyectoG8/Views/Categoria/editarCategoria.php?id=<?= $c['id_categoria'] ?>" 
+                         class="btn btn-sm btn-primary">Editar</a>
+
+                      <form method="post" 
+                            action="../../Controllers/categoriaController.php" 
+                            style="display:inline-block" 
+                            onsubmit="return confirm('¿Desea eliminar esta categoría?');">
+                        <input type="hidden" name="id" value="<?= $c['id_categoria'] ?>">
+                        <input type="hidden" name="accion" value="eliminar">
+                        <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                      </form>
+                    </td>
+                  <?php endif; ?>
                 </tr>
               <?php endforeach; ?>
             <?php else: ?>
               <tr>
-                <td colspan="3" class="text-center">No hay categorías registradas.</td>
+                <td colspan="4" class="text-center">No hay categorías registradas.</td>
               </tr>
             <?php endif; ?>
           </tbody>

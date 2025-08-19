@@ -5,6 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/productoModel.php';
 include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
+include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/categoriaModel.php';
 
 // Obtener el producto por ID desde la URL
 $id = isset($_GET['id']) ? $_GET['id'] : null;
@@ -19,6 +20,8 @@ if ($id !== null) {
         }
     }
 }
+$categorias = ListarCategoriasModel();
+
 ?>
 
 <!DOCTYPE html>
@@ -28,10 +31,19 @@ if ($id !== null) {
 <h1>Editar producto</h1>
 
 <?php if ($producto): ?>
+    
+    
 <form action="../../Controllers/productoController.php?action=editar" method="post" class="mt-4">
     <input type="hidden" name="id" value="<?= htmlspecialchars($producto['id_producto']) ?>">
     <label>Categoría</label>
-    <input type="number" name="idCategoria" class="form-control" value="<" required>
+    <select name="idCategoria" class="form-control" required>
+        <?php foreach ($categorias as $cat): ?>
+            <option value="<?= $cat['id_categoria'] ?>" 
+    <?= (isset($producto['id_categoria']) && $cat['id_categoria'] == $producto['id_categoria']) ? 'selected' : '' ?>>
+    <?= htmlspecialchars($cat['descripcion']) ?>
+</option>
+        <?php endforeach; ?>
+    </select>
     <label>Nombre</label>
     <input type="text" name="nombre" class="form-control" value="<?= htmlspecialchars($producto['nombre']) ?>" required>
     <label>Detalle</label>
