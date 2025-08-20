@@ -20,10 +20,19 @@ switch ($accion) {
         $producto_id = $_POST['producto_id'] ?? null;
         $cantidad = $_POST['cantidad'] ?? 1;
 
+        $respuesta = ['success' => false, 'message' => 'No se pudo agregar el producto'];
+
         if ($producto_id && $usuario_id) {
-            CarritoModel::agregar($usuario_id, $producto_id, $cantidad);
+            $resultado = CarritoModel::agregar($usuario_id, $producto_id, $cantidad);
+            if ($resultado) {
+                $respuesta = ['success' => true, 'message' => 'Producto agregado al carrito'];
+            }
         }
-        header("Location: ../Views/Carrito/verCarrito.php");
+
+        // Responder siempre en JSON para AJAX
+        header('Content-Type: application/json');
+        echo json_encode($respuesta);
+        exit; // importantísimo para que no se haga la redirección
         break;
 
     case 'actualizar':
@@ -47,10 +56,8 @@ switch ($accion) {
 
     case 'finalizar':
         if ($usuario_id) {
-
-            $idFactura = CarritoModel::finalizarCompra($usuario_id);
-
-            header("Location: ../Views/Carrito/factura.php?id=" . $idFactura);
+            CarritoModel::finalizarCompra($usuario_id);
+            header("Location: ../Views/Carrito/historial.php");
             exit();
         }
         break;
