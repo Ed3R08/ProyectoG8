@@ -54,7 +54,6 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
         <table class="table table-striped">
           <thead>
             <tr>
-              <th>ID</th>
               <th>Nombre</th>
               <th>Precio</th>
               <th>Existencias</th>
@@ -66,7 +65,6 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
             <?php if (!empty($productosFiltrados)): ?>
               <?php foreach($productosFiltrados as $p): ?>
                 <tr>
-                  <td><?= $p['id_producto'] ?></td>
                   <td><?= htmlspecialchars($p['nombre']) ?></td>
                   <td><?= number_format($p['precio'], 2) ?></td>
                   <td><?= $p['existencias'] ?></td>
@@ -124,7 +122,7 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
               formData.append("producto_id", producto_id);
               formData.append("cantidad", cantidad);
 
-              fetch("http://localhost:81/ProyectoG8/Controllers/carritoController.php?accion=agregar", {
+              fetch("http://localhost:80/ProyectoG8/Controllers/carritoController.php?accion=agregar", {
                   method: "POST",
                   body: formData
               })

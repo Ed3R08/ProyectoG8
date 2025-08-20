@@ -1,21 +1,37 @@
 <?php
 include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/connect.php';
 
+/**
+ * Drena todos los resultsets pendientes de una llamada a CALL ...;
+ * Evita "Commands out of sync".
+ */
+function _drainResults(mysqli $cn)
+{
+    while ($cn->more_results() && $cn->next_result()) {
+        if ($rs = $cn->use_result()) {
+            $rs->free();
+        }
+    }
+}
+
 function ListarProductosModel($idCategoria = null)
 {
     try {
         $cn = OpenDB();
+
         if ($idCategoria !== null) {
-            $idCatEsc = $cn->real_escape_string($idCategoria);
-            $rs = $cn->query("CALL sp_consulta_productos($idCatEsc)");
+            $idCat = (int) $idCategoria;
+            $rs = $cn->query("CALL sp_consulta_productos($idCat)");
         } else {
-            // si quieres listar todos sin filtrar, podrías crear otro SP, o reutilizar uno con NULL
-            $rs = $cn->query("SELECT p.id_producto, p.nombre, p.detalle, p.precio, p.existencias, p.ruta_imagen 
-                                FROM producto p
-                               WHERE p.activo = 1
-                               ORDER BY p.nombre");
+            $rs = $cn->query("CALL sp_consulta_productos_all()");
         }
-        $rows = $rs->fetch_all(MYSQLI_ASSOC);
+
+        $rows = [];
+        if ($rs) {
+            $rows = $rs->fetch_all(MYSQLI_ASSOC);
+            $rs->free();
+        }
+        _drainResults($cn);
         CloseDB($cn);
         return $rows;
     } catch (Exception $e) {
@@ -28,23 +44,19 @@ function RegistrarProductoModel($idCategoria, $nombre, $detalle, $precio, $stock
 {
     try {
         $cn = OpenDB();
-        $catEsc = $cn->real_escape_string($idCategoria);
-        $nombreEsc = $cn->real_escape_string($nombre);
-        $detEsc = $cn->real_escape_string($detalle);
-        $precioEsc = $cn->real_escape_string($precio);
-        $stkEsc = $cn->real_escape_string($stock);
-        $imgEsc = $cn->real_escape_string($rutaImagen);
-        $sql = "CALL sp_insert_producto(
-            $catEsc,
-            '$nombreEsc',
-            '$detEsc',
-            $precioEsc,
-            $stkEsc,
-            '$imgEsc'
-        )";
+        $cat = (int) $idCategoria;
+        $nom = $cn->real_escape_string($nombre);
+        $det = $cn->real_escape_string($detalle);
+        $precioVal = (float) $precio;
+        $stk = (int) $stock;
+        $img = $cn->real_escape_string((string) $rutaImagen);
+
+        $sql = "CALL sp_insert_producto($cat, '$nom', '$det', $precioVal, $stk, '$img')";
         $ok = $cn->query($sql);
+
+        _drainResults($cn);
         CloseDB($cn);
-        return $ok;
+        return (bool) $ok;
     } catch (Exception $e) {
         RegistrarError($e);
         return false;
@@ -55,35 +67,38 @@ function ActualizarProductoModel($id, $idCategoria, $nombre, $detalle, $precio, 
 {
     try {
         $cn = OpenDB();
+        $idProd = (int) $id;
+        $idCat = (int) $idCategoria;
+        $nom = $cn->real_escape_string($nombre);
+        $det = $cn->real_escape_string($detalle);
+        $precioVal = (float) $precio;
+        $existVal = (int) $existencias;
+        $ruta = $cn->real_escape_string((string) $ruta_imagen);
 
-        $idCategoriaEsc = $cn->real_escape_string($idCategoria);
-        $nombreEsc = $cn->real_escape_string($nombre);
-        $detalleEsc = $cn->real_escape_string($detalle);
-        $precioEsc = $cn->real_escape_string($precio);
-        $existenciasEsc = $cn->real_escape_string($existencias);
-        $rutaImagenEsc = $cn->real_escape_string($ruta_imagen);
-
-        $sql = "CALL EditarProducto('$id', '$idCategoriaEsc', '$nombreEsc', '$detalleEsc', '$precioEsc', '$existenciasEsc', '$rutaImagenEsc')";
-        if (!$cn->query($sql)) {
+        $sql = "CALL EditarProducto($idProd, $idCat, '$nom', '$det', $precioVal, $existVal, '$ruta')";
+        $ok = $cn->query($sql);
+        if (!$ok) {
             throw new Exception("Error MySQL: " . $cn->error);
         }
 
+        _drainResults($cn);
         CloseDB($cn);
         return true;
     } catch (Exception $error) {
         RegistrarError($error);
-        echo "<pre>" . $error->getMessage() . "</pre>";  // Mostrar error para debug
         return false;
     }
 }
+
 function EliminarProductoModel($id)
 {
     try {
         $cn = OpenDB();
-        $sql = "CALL EliminarProducto($id)";
-        $ok = $cn->query($sql);
+        $idProd = (int) $id;
+        $ok = $cn->query("CALL EliminarProducto($idProd)");
+        _drainResults($cn);
         CloseDB($cn);
-        return $ok;
+        return (bool) $ok;
     } catch (Exception $e) {
         RegistrarError($e);
         return false;

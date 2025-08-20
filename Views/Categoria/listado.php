@@ -23,9 +23,8 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
         <h3>Lista de Categorías</h3>
         <table class="table table-striped">
           <thead>
-            <tr>
-              <th>ID</th>
-              <th>Descripción</th>
+            <tr>           
+              <th>Categoría</th>
               <th>Imagen</th>
               <?php if (isset($_SESSION['IdRol']) && $_SESSION['IdRol'] == 2): ?>
                 <th>Acciones</th>
@@ -36,7 +35,7 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
             <?php if (!empty($categorias)): ?>
               <?php foreach ($categorias as $c): ?>
                 <tr>
-                  <td><?= $c['id_categoria'] ?></td>
+                  
                   <td><a href="/ProyectoG8/Views/Categoria/productosPorCategoria.php?id=<?= $c['id_categoria'] ?>">
                         <?= htmlspecialchars($c['descripcion']) ?>
                       </a>

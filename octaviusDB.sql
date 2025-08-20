@@ -35,7 +35,7 @@ CREATE TABLE `carrito` (
   KEY `producto_id` (`producto_id`),
   CONSTRAINT `carrito_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `tusuario` (`IdUsuario`),
   CONSTRAINT `carrito_ibfk_2` FOREIGN KEY (`producto_id`) REFERENCES `producto` (`id_producto`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -60,7 +60,7 @@ CREATE TABLE `categoria` (
   `ruta_imagen` varchar(255) DEFAULT NULL,
   `activo` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id_categoria`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -69,7 +69,7 @@ CREATE TABLE `categoria` (
 
 LOCK TABLES `categoria` WRITE;
 /*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
-INSERT INTO `categoria` VALUES (1,'Servicios','https://i.imgur.com/ZFt2HRb.jpg',1),(2,'Químicos','https://tse2.mm.bing.net/th/id/OIP.jMoGD8Lyva_yjGV5kxX_yAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3',1),(3,'Accesorios','https://i.imgur.com/mj0gYIx.jpg',1),(4,'Equipos','https://i.imgur.com/qV97892.jpg',1),(5,'Prueba','C:\\Users\\XPC\\OneDrive\\Imágenes\\Goku2',0),(6,'Goku','https://imgur.com/a/QHfsAod',0),(7,'Prueba f1oioi','https://i.imgur.com/ZFt2HRb.jpg',0),(8,'Prueba f2','https://i.imgur.com/ZFt2HRb.jpg',0),(9,'Prueba f3','https://i.imgur.com/ZFt2HRb.jpg',0),(10,'Prueba f3','https://imgur.com/a/QHfsAod',0),(11,'Prueba Goku','https://i.imgur.com/hdqrHAx.png',1);
+INSERT INTO `categoria` VALUES (1,'Servicios','https://i.imgur.com/ZFt2HRb.jpg',1),(2,'Químicos','https://tse2.mm.bing.net/th/id/OIP.jMoGD8Lyva_yjGV5kxX_yAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3',1),(3,'Accesorios','https://i.imgur.com/mj0gYIx.jpg',1),(4,'Equipos','https://i.imgur.com/qV97892.jpg',1),(5,'Prueba','C:\\Users\\XPC\\OneDrive\\Imágenes\\Goku2',0),(6,'Goku','https://imgur.com/a/QHfsAod',0),(7,'Prueba f1oioi','https://i.imgur.com/ZFt2HRb.jpg',0),(8,'Prueba f2','https://i.imgur.com/ZFt2HRb.jpg',0),(9,'Prueba f3','https://i.imgur.com/ZFt2HRb.jpg',0),(10,'Prueba f3','https://imgur.com/a/QHfsAod',0),(11,'Prueba Goku','https://i.imgur.com/hdqrHAx.png',0),(12,'Prueba Goku','https://i.imgur.com/hdqrHAx.png',1);
 /*!40000 ALTER TABLE `categoria` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -88,7 +88,7 @@ CREATE TABLE `historial_compras` (
   PRIMARY KEY (`id_compra`),
   KEY `id_usuario` (`id_usuario`),
   CONSTRAINT `historial_compras_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `tusuario` (`IdUsuario`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -97,7 +97,7 @@ CREATE TABLE `historial_compras` (
 
 LOCK TABLES `historial_compras` WRITE;
 /*!40000 ALTER TABLE `historial_compras` DISABLE KEYS */;
-INSERT INTO `historial_compras` VALUES (1,1,730.00,'2025-07-23 11:10:04'),(2,1,30.00,'2025-07-23 11:10:29'),(3,1,30.00,'2025-07-23 16:36:37'),(4,1,30.00,'2025-07-23 16:52:16'),(5,1,30.00,'2025-07-23 16:53:08'),(6,1,600.00,'2025-08-12 15:44:51'),(7,1,30.00,'2025-08-12 16:12:25'),(8,1,90.00,'2025-08-12 16:27:07'),(9,1,90.00,'2025-08-19 15:20:35'),(10,1,80.00,'2025-08-19 15:34:04');
+INSERT INTO `historial_compras` VALUES (1,1,730.00,'2025-07-23 11:10:04'),(2,1,30.00,'2025-07-23 11:10:29'),(3,1,30.00,'2025-07-23 16:36:37'),(4,1,30.00,'2025-07-23 16:52:16'),(5,1,30.00,'2025-07-23 16:53:08'),(6,1,600.00,'2025-08-12 15:44:51'),(7,1,30.00,'2025-08-12 16:12:25'),(8,1,90.00,'2025-08-12 16:27:07'),(9,1,90.00,'2025-08-19 15:20:35'),(10,1,80.00,'2025-08-19 15:34:04'),(11,1,810.00,'2025-08-20 12:23:11'),(12,1,1910.00,'2025-08-20 13:44:43'),(13,1,2965.00,'2025-08-20 13:54:02'),(14,1,2565.00,'2025-08-20 14:08:15'),(15,1,60.00,'2025-08-20 14:12:01'),(16,1,5405.00,'2025-08-20 14:12:35'),(17,1,390.00,'2025-08-20 14:16:04');
 /*!40000 ALTER TABLE `historial_compras` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -119,7 +119,7 @@ CREATE TABLE `historial_detalle` (
   KEY `producto_id` (`producto_id`),
   CONSTRAINT `historial_detalle_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `historial_compras` (`id_compra`) ON DELETE CASCADE,
   CONSTRAINT `historial_detalle_ibfk_2` FOREIGN KEY (`producto_id`) REFERENCES `producto` (`id_producto`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -128,7 +128,7 @@ CREATE TABLE `historial_detalle` (
 
 LOCK TABLES `historial_detalle` WRITE;
 /*!40000 ALTER TABLE `historial_detalle` DISABLE KEYS */;
-INSERT INTO `historial_detalle` VALUES (1,1,13,1,300.00),(2,1,6,6,30.00),(3,1,15,1,250.00),(4,2,6,1,30.00),(5,3,6,1,30.00),(6,4,6,1,30.00),(7,5,6,1,30.00),(8,6,13,2,300.00),(9,7,6,1,30.00),(10,8,6,3,30.00),(11,9,6,3,30.00),(12,10,5,1,80.00);
+INSERT INTO `historial_detalle` VALUES (1,1,13,1,300.00),(2,1,6,6,30.00),(3,1,15,1,250.00),(4,2,6,1,30.00),(5,3,6,1,30.00),(6,4,6,1,30.00),(7,5,6,1,30.00),(8,6,13,2,300.00),(9,7,6,1,30.00),(10,8,6,3,30.00),(11,9,6,3,30.00),(12,10,5,1,80.00),(13,11,6,2,30.00),(14,11,15,3,250.00),(16,12,6,6,30.00),(17,12,13,3,300.00),(18,12,11,1,60.00),(19,12,2,1,100.00),(20,12,9,1,120.00),(21,12,14,1,400.00),(22,12,1,1,150.00),(23,13,6,2,30.00),(24,13,13,1,300.00),(25,13,7,1,25.00),(26,13,15,1,2500.00),(27,13,5,1,80.00),(30,14,6,1,30.00),(31,14,8,1,35.00),(32,14,15,1,2500.00),(33,15,6,2,30.00),(34,16,6,1,30.00),(35,16,13,1,300.00),(36,16,7,1,25.00),(37,16,15,2,2500.00),(38,16,4,1,50.00),(41,17,6,1,30.00),(42,17,13,1,300.00),(43,17,8,1,35.00),(44,17,7,1,25.00);
 /*!40000 ALTER TABLE `historial_detalle` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -151,7 +151,7 @@ CREATE TABLE `producto` (
   PRIMARY KEY (`id_producto`),
   KEY `fk_producto_categoria` (`id_categoria`),
   CONSTRAINT `fk_producto_categoria` FOREIGN KEY (`id_categoria`) REFERENCES `categoria` (`id_categoria`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -160,7 +160,7 @@ CREATE TABLE `producto` (
 
 LOCK TABLES `producto` WRITE;
 /*!40000 ALTER TABLE `producto` DISABLE KEYS */;
-INSERT INTO `producto` VALUES (1,1,'Mantenimiento','Servicio integral de mantenimiento de piscinas, incluyendo revisión y limpieza profunda de equipos y estructuras.',150.00,10,'https://i.imgur.com/ZFt2HRb.jpg',1),(2,1,'Limpieza','Servicio regular de limpieza para mantener el agua cristalina y libre de impurezas.',100.00,15,'https://i.imgur.com/CB2H0XY.jpg',1),(3,1,'Visita Técnica','Visita técnica para diagnóstico y solución de problemas en el sistema de la piscina.',200.00,5,'https://i.imgur.com/sisEdjN.jpg',1),(4,2,'Cloro Granulado','Cloro granulado para desinfección rápida y efectiva del agua de la piscina.',50.00,100,'https://i.imgur.com/yUnRO97.jpg',1),(5,2,'Cloro en Tabletas','Tabletas de cloro de liberación controlada para el mantenimiento diario.',80.00,80,'https://i.imgur.com/A7MS0u3.jpg',1),(6,3,'Alguicida','Producto para eliminar y prevenir el crecimiento d',30.00,50,'https://i.imgur.com/qmNhWJ2.jpg',1),(7,2,'Clarificador','Producto que mejora la claridad del agua eliminando partículas en suspensión.',25.00,150,'https://i.imgur.com/qP0Ew8p.jpg',1),(8,3,'Boquillas de Retorno','Boquillas para un óptimo retorno del agua en piscinas.',35.00,50,'https://i.imgur.com/0AloD4A.jpg',1),(9,3,'Hidrojets','Sistemas de hidrojets para masaje y mejor circulación del agua.',120.00,30,'https://i.imgur.com/7jaExhD.jpg',1),(10,3,'Parrillas de Fondo','Parrillas que facilitan el drenaje y la limpieza del fondo de la piscina.',45.00,40,'https://i.imgur.com/PcKDLFI.jpg',1),(11,3,'Skimmer','Skimmer para recoger hojas y residuos en la superficie del agua.',60.00,25,'https://i.imgur.com/AnYNpT6.jpg',1),(12,3,'Rebalse','Sistema de rebalse para evitar el sobrellenado de la piscina.',55.00,20,'https://i.imgur.com/JX0BtQH.jpg',1),(13,4,'Bomba de Agua','Bomba de alta eficiencia para la circulación y recirculación del agua de la piscina.',300.00,10,'https://i.imgur.com/dhjw4Cm.jpg',1),(14,4,'Filtro de Piscina','Filtro de alta capacidad para mantener el agua limpia y libre de impurezas.',400.00,8,'https://i.imgur.com/0WqE6yU.jpg',1),(15,4,'Clorinador','Sistema automático que dosifica cloro en la piscina para garantizar la desinfección continua.',250.00,12,'https://i.imgur.com/y5qAZYw.jpg',1);
+INSERT INTO `producto` VALUES (1,1,'Mantenimiento','Servicio integral de mantenimiento de piscinas, incluyendo revisión y limpieza profunda de equipos y estructuras.',150.00,10,'https://i.imgur.com/ZFt2HRb.jpg',1),(2,1,'Limpieza','Servicio regular de limpieza para mantener el agua cristalina y libre de impurezas.',100.00,15,'https://i.imgur.com/CB2H0XY.jpg',1),(3,1,'Visita Técnica','Visita técnica para diagnóstico y solución de problemas en el sistema de la piscina.',200.00,5,'https://i.imgur.com/sisEdjN.jpg',1),(4,2,'Cloro Granulado','Cloro granulado para desinfección rápida y efectiva del agua de la piscina.',50.00,100,'https://i.imgur.com/yUnRO97.jpg',1),(5,2,'Cloro en Tabletas','Tabletas de cloro de liberación controlada para el mantenimiento diario.',80.00,80,'https://i.imgur.com/A7MS0u3.jpg',1),(6,3,'Alguicida','Producto para eliminar y prevenir el crecimiento d',30.00,15,'https://i.imgur.com/qmNhWJ2.jpg',1),(7,2,'Clarificador','Producto que mejora la claridad del agua eliminando partículas en suspensión.',25.00,150,'https://i.imgur.com/qP0Ew8p.jpg',1),(8,3,'Boquillas de Retorno','Boquillas para un óptimo retorno del agua en piscinas.',35.00,50,'https://i.imgur.com/0AloD4A.jpg',1),(9,3,'Hidrojets','Sistemas de hidrojets para masaje y mejor circulación del agua.',120.00,30,'https://i.imgur.com/7jaExhD.jpg',1),(10,3,'Parrillas de Fondo','Parrillas que facilitan el drenaje y la limpieza del fondo de la piscina.',45.00,40,'https://i.imgur.com/PcKDLFI.jpg',1),(11,3,'Skimmer','Skimmer para recoger hojas y residuos en la superficie del agua.',60.00,25,'https://i.imgur.com/AnYNpT6.jpg',1),(12,3,'Rebalse','Sistema de rebalse para evitar el sobrellenado de la piscina.',55.00,20,'https://i.imgur.com/JX0BtQH.jpg',1),(13,4,'Bomba de Agua','Bomba de alta eficiencia para la circulación y recirculación del agua de la piscina.',300.00,10,'https://i.imgur.com/dhjw4Cm.jpg',1),(14,4,'Filtro de Piscina','Filtro de alta capacidad para mantener el agua limpia y libre de impurezas.',400.00,8,'https://i.imgur.com/0WqE6yU.jpg',1),(15,3,'Clorinador','Sistema automático que dosifica cloro en la piscin',2500.00,14,'https://i.imgur.com/y5qAZYw.jpg',1),(20,12,'Eder','prueba',100.00,10,'https://i.imgur.com/5S1OuYL_d.jpeg?maxwidth=520&shape=thumb&fidelity=high',1);
 /*!40000 ALTER TABLE `producto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -291,7 +291,7 @@ CREATE TABLE `tusuario` (
 
 LOCK TABLES `tusuario` WRITE;
 /*!40000 ALTER TABLE `tusuario` DISABLE KEYS */;
-INSERT INTO `tusuario` VALUES (1,'Eder Serrano Valerio','eserrano00695@ufide.ac.cr','114300695','01234',1),(2,'Fernanda Ramirez Acuña','framirez00198@ufide.ac.cr','114300198','56789',2);
+INSERT INTO `tusuario` VALUES (1,'Eder Serrano Valerio','eserrano00695@ufide.ac.cr','114300695','01234',1),(2,'Fernanda Ramirez Acuña','framirez00198@ufide.ac.cr','114300198','98765',2);
 /*!40000 ALTER TABLE `tusuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -680,6 +680,28 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_consulta_productos_all` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_consulta_productos_all`()
+BEGIN
+  SELECT id_producto, nombre, detalle, precio, existencias, ruta_imagen
+    FROM producto
+   WHERE activo = 1
+   ORDER BY nombre;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_consulta_visitas` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -704,6 +726,31 @@ BEGIN
   JOIN tipo_servicio ts ON v.id_tipo = ts.id_tipo
   WHERE v.id_usuario = pUser
   ORDER BY v.fecha_hora DESC;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_detalle_compra` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_detalle_compra`(IN p_id_compra BIGINT)
+BEGIN
+  SELECT d.cantidad,
+         d.precio,
+         p.nombre AS producto,
+         (d.cantidad * d.precio) AS subtotal
+  FROM historial_detalle d
+  JOIN producto p ON p.id_producto = d.producto_id
+  WHERE d.id_compra = p_id_compra;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -767,6 +814,37 @@ BEGIN
 
     -- Vaciar carrito
     DELETE FROM carrito WHERE usuario_id = p_usuario_id;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_historial_usuario` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_historial_usuario`(IN p_usuario_id BIGINT)
+BEGIN
+  SELECT 
+      hc.id_compra,
+      hc.fecha,
+      hc.total,
+      hd.producto_id,
+      p.nombre AS producto,
+      hd.cantidad,
+      hd.precio
+  FROM historial_compras hc
+  JOIN historial_detalle hd ON hc.id_compra = hd.id_compra
+  JOIN producto p          ON p.id_producto = hd.producto_id
+  WHERE hc.id_usuario = p_usuario_id
+  ORDER BY hc.fecha DESC, hc.id_compra DESC;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -848,6 +926,51 @@ BEGIN
   ) VALUES (
     pUser, pTipo, pFechaHora, pComentarios
   );
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_listar_usuarios` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_usuarios`()
+BEGIN
+  SELECT IdUsuario, Nombre
+    FROM tusuario
+   ORDER BY Nombre;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_ultima_compra_por_usuario` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_ultima_compra_por_usuario`(IN p_usuario_id BIGINT)
+BEGIN
+  SELECT c.id_compra, c.fecha, u.Nombre AS cliente
+  FROM historial_compras c
+  JOIN tusuario u ON u.IdUsuario = c.id_usuario
+  WHERE c.id_usuario = p_usuario_id
+  ORDER BY c.id_compra DESC
+  LIMIT 1;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -951,4 +1074,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-08-19 16:43:44
+-- Dump completed on 2025-08-20 14:21:48

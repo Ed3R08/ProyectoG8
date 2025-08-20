@@ -57,7 +57,8 @@ switch ($accion) {
     case 'finalizar':
         if ($usuario_id) {
             CarritoModel::finalizarCompra($usuario_id);
-            header("Location: ../Views/Carrito/historial.php");
+           header("Location: /ProyectoG8/Views/Carrito/factura.php?id=".$idCompra);
+
             exit();
         }
         break;
