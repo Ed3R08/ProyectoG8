@@ -1,16 +1,23 @@
 <?php
 
-
 require_once __DIR__ . '/connect.php';
 
 class CarritoModel {
+
     public static function agregar($usuarioId, $productoId, $cantidad) {
         $conn = OpenDB();
         $stmt = $conn->prepare("CALL sp_agregar_carrito1(?, ?, ?)");
+        if (!$stmt) {
+            CloseDB($conn);
+            return false; // falla al preparar la consulta
+        }
+
         $stmt->bind_param("iii", $usuarioId, $productoId, $cantidad);
-        $stmt->execute();
+        $ok = $stmt->execute(); // devuelve true si se ejecutó correctamente
         $stmt->close();
         CloseDB($conn);
+
+        return $ok;
     }
 
     public static function ver($usuarioId) {
