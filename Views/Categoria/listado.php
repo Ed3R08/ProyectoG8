@@ -37,7 +37,10 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
               <?php foreach ($categorias as $c): ?>
                 <tr>
                   <td><?= $c['id_categoria'] ?></td>
-                  <td><?= htmlspecialchars($c['descripcion']) ?></td>
+                  <td><a href="/ProyectoG8/Views/Categoria/productosPorCategoria.php?id=<?= $c['id_categoria'] ?>">
+                        <?= htmlspecialchars($c['descripcion']) ?>
+                      </a>
+                  </td>
                   <td>
                     <?php if ($c['ruta_imagen']): ?>
                       <img src="<?= $c['ruta_imagen'] ?>" alt="" style="height:40px">
