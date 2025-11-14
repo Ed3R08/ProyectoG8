@@ -33,7 +33,7 @@ if (isset($_POST['btnGuardar'])) {
             <input type="text" name="descripcion" class="form-control" required>
           </div>
           <div class="form-group">
-            <label>URL de la Imagen</label>
+            <label>Ruta de la Imagen</label>
             <input type="url" name="ruta_imagen" class="form-control">
           </div>
           <button name="btnGuardar" class="btn btn-primary">Guardar</button>

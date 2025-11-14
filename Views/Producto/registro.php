@@ -63,7 +63,7 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
             <input type="number" name="existencias" class="form-control" required>
           </div>
           <div class="form-group">
-            <label>URL Imagen</label>
+            <label>Ruta de la Imagen</label>
             <input type="text" name="ruta_imagen" class="form-control">
           </div>
           <button name="btnGuardar" type="submit" class="btn btn-success">Guardar</button>
