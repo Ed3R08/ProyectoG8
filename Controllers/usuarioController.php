@@ -2,59 +2,68 @@
 include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/usuarioModel.php';
 include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/homeModel.php';
 
-function ConsultarInfoUsuario($idUsuario)
-{
-    $respuesta = ConsultarInfoUsuarioModel($idUsuario);
-
-    if ($respuesta != null && $respuesta->num_rows > 0) {
-        return mysqli_fetch_array($respuesta);
-    }
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
+
+/* ============================================================
+    CONSULTAR INFORMACIÓN DEL USUARIO (ORACLE)
+============================================================ */
+function ConsultarInfoUsuario($idUsuario)
+{
+    return ConsultarInfoUsuarioModel($idUsuario);
+}
+
+
+/* ============================================================
+    ACTUALIZAR PERFIL DE USUARIO
+============================================================ */
 if (isset($_POST["btnActualizarPerfilUsuario"])) {
+
     $idUsuario = $_SESSION["IdUsuario"];
     $nombre = $_POST["txtNombre"];
     $correo = $_POST["txtCorreo"];
     $identificacion = $_POST["txtIdentificacion"];
 
-    $respuesta = ActualizarPerfilUsuarioModel($idUsuario, $nombre, $correo, $identificacion);
+    $resultado = ActualizarPerfilUsuarioModel($idUsuario, $nombre, $correo, $identificacion);
 
-    if ($respuesta) {
+    if ($resultado) {
         $_SESSION["Nombre"] = $nombre;
         $_POST["txtMensaje"] = "Su información se actualizó correctamente.";
     } else {
-        $_POST["txtMensaje"] = "Su información no fue actualizada correctamente.";
+        $_POST["txtMensaje"] = "Su información NO fue actualizada.";
     }
 }
 
+/* ============================================================
+    ACTUALIZAR CONTRASEÑA
+============================================================ */
 if (isset($_POST["btnActualizarContrasenna"])) {
-    $idUsuario = $_SESSION["IdUsuario"];
-    $contrasennaNueva = $_POST["txtContrasennaNueva"];
 
-    $contrasennaAnterior = $_POST["txtContrasennaAnterior"];
+    $idUsuario = $_SESSION["IdUsuario"];
+    $actual = $_POST["txtContrasennaAnterior"];
+    $nueva = $_POST["txtContrasennaNueva"];
     $confirmar = $_POST["txtConfirmar"];
     $contrasennaSesion = $_SESSION["Contrasenna"];
 
-    if ($contrasennaSesion != $contrasennaAnterior) {
-        $_POST["txtMensaje"] = "Valide su contraseña anterior.";
+    if ($contrasennaSesion != $actual) {
+        $_POST["txtMensaje"] = "La contraseña anterior no coincide.";
         return;
     }
 
-    if ($contrasennaNueva != $confirmar) {
-        $_POST["txtMensaje"] = "Valide la confirmación de su contraseña nueva.";
+    if ($nueva != $confirmar) {
+        $_POST["txtMensaje"] = "La confirmación no coincide.";
         return;
     }
 
-    $respuesta = ActualizarContrasennaModel($idUsuario, $contrasennaNueva);
+    $resultado = ActualizarContrasennaModel($idUsuario, $nueva);
 
-    if ($respuesta) {
-        $_SESSION["Contrasenna"] = $contrasennaNueva;
-        $_POST["txtMensaje"] = "Su contraseña se actualizó correctamente.";
+    if ($resultado) {
+        $_SESSION["Contrasenna"] = $nueva;
+        $_POST["txtMensaje"] = "Contraseña actualizada correctamente.";
     } else {
-        $_POST["txtMensaje"] = "Su contraseña no fue actualizada correctamente.";
+        $_POST["txtMensaje"] = "Error al actualizar la contraseña.";
     }
 }
-
-
-
 ?>

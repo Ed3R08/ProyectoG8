@@ -1,80 +1,68 @@
 <?php
-    include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/connect.php';
+require_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/conexionOracle.php';
 
-    function ValidarInicioSesionModel($correo, $contrasenna)
-    {
-        try
-        {
-            $context = OpenDB();
 
-            $sp = "CALL ValidarInicioSesion('$correo', '$contrasenna')";
-            $respuesta = $context -> query($sp);
+/* ============================================================
+    REGISTRAR USUARIO
+============================================================ */
+function RegistrarUsuarioModel($nombre, $apellido1, $apellido2, $correo, $identificacion, $contrasenna)
+{
+    try {
+        $conn = conectarOracle();
 
-            CloseDB($context);            
-            return $respuesta;
-        }
-        catch(Exception $error)
-        {
-            RegistrarError($error);
-            return null;
-        }
+        $sql = "BEGIN RegistrarUsuario(:nom, :ap1, :ap2, :cor, :ident, :pass); END;";
+        $stmt = oci_parse($conn, $sql);
+
+        oci_bind_by_name($stmt, ":nom",   $nombre);
+        oci_bind_by_name($stmt, ":ap1",   $apellido1);
+        oci_bind_by_name($stmt, ":ap2",   $apellido2);
+        oci_bind_by_name($stmt, ":cor",   $correo);
+        oci_bind_by_name($stmt, ":ident", $identificacion);
+        oci_bind_by_name($stmt, ":pass",  $contrasenna);
+
+        $ok = oci_execute($stmt);
+
+        oci_free_statement($stmt);
+        oci_close($conn);
+
+        return $ok;
+
+    } catch (Exception $e) {
+        return false;
     }
+}
 
-    function RegistrarUsuarioModel($nombre, $correo, $identificacion, $contrasenna)
-    {
-        try
-        {
-            $context = OpenDB();
 
-            $sp = "CALL RegistrarUsuario('$nombre', '$correo', '$identificacion', '$contrasenna')";
-            $respuesta = $context -> query($sp);
+/* ============================================================
+    VALIDAR INICIO DE SESIÓN (LOGIN)
+============================================================ */
+function ValidarInicioSesionModel($correo, $contrasenna)
+{
+    try {
+        $conn = conectarOracle();
 
-            CloseDB($context);            
-            return $respuesta;
-        }
-        catch(Exception $error)
-        {
-            RegistrarError($error);
-            return false;
-        }
+        $sql = "BEGIN ValidarInicioSesion(:cor, :pass, :resultado); END;";
+        $stmt = oci_parse($conn, $sql);
+
+        oci_bind_by_name($stmt, ":cor", $correo);
+        oci_bind_by_name($stmt, ":pass", $contrasenna);
+
+        $cursor = oci_new_cursor($conn);
+        oci_bind_by_name($stmt, ":resultado", $cursor, -1, OCI_B_CURSOR);
+
+        oci_execute($stmt);
+        oci_execute($cursor);
+
+        $fila = oci_fetch_assoc($cursor);
+
+        oci_free_statement($stmt);
+        oci_free_statement($cursor);
+        oci_close($conn);
+
+        return $fila;
+
+    } catch (Exception $e) {
+        return null;
     }
-
-    function ValidarCorreoModel($correo)
-    {
-        try
-        {
-            $context = OpenDB();
-
-            $sp = "CALL ValidarCorreo('$correo')";
-            $respuesta = $context -> query($sp);
-
-            CloseDB($context);            
-            return $respuesta;
-        }
-        catch(Exception $error)
-        {
-            RegistrarError($error);
-            return null;
-        }
-    }
-
-    function ActualizarContrasennaModel($idUsuario, $contrasenna)
-    {
-        try
-        {
-            $context = OpenDB();
-
-            $sp = "CALL ActualizarContrasenna('$idUsuario', '$contrasenna')";
-            $respuesta = $context -> query($sp);
-
-            CloseDB($context);            
-            return $respuesta;
-        }
-        catch(Exception $error)
-        {
-            RegistrarError($error);
-            return false;
-        }
-    }
-
+}
 ?>

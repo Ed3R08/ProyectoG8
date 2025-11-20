@@ -1,79 +1,99 @@
 <?php
-include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/homeModel.php';
-include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Controllers/utilitariosController.php';
+require_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/homeModel.php';
+require_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Controllers/utilitariosController.php';
 
-if (session_status() == PHP_SESSION_NONE) {
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+/* ============================================================
+    INICIAR SESIÓN
+============================================================ */
 if (isset($_POST["btnIniciarSesion"])) {
+
     $correo = $_POST["txtCorreo"];
     $contrasenna = $_POST["txtContrasenna"];
 
-    $respuesta = ValidarInicioSesionModel($correo, $contrasenna);
+    $fila = ValidarInicioSesionModel($correo, $contrasenna);
 
-    if ($respuesta != null && $respuesta->num_rows > 0) {
-        $datos = mysqli_fetch_array($respuesta);
-        $_SESSION["Nombre"] = $datos["Nombre"];
-        $_SESSION["IdUsuario"] = $datos["IdUsuario"];
-        $_SESSION["Contrasenna"] = $datos["Contrasenna"];
-        $_SESSION["IdRol"] = $datos["IdRol"];
-        $_SESSION["NombreRol"] = $datos["NombreRol"];
+    if ($fila) {
+        $_SESSION["Nombre"]      = $fila["NOMBRE"];
+        $_SESSION["IdUsuario"]   = $fila["ID_USUARIO"];
+        $_SESSION["Contrasenna"] = $fila["CONTRASENA"];
+        $_SESSION["IdRol"]       = $fila["ID_ROL"];
+        $_SESSION["NombreRol"]   = $fila["NOMBRE_ROL"];
 
         header("location: ../../Views/Home/principal.php");
+        exit();
     } else {
-        $_POST["txtMensaje"] = "Su información no fue validada correctamente.";
+        $_POST["txtMensaje"] = "Correo o contraseña incorrectos.";
     }
 }
 
+/* ============================================================
+    REGISTRAR NUEVO USUARIO  (SIN API, MANUAL)
+============================================================ */
 if (isset($_POST["btnRegistrarUsuario"])) {
-    $nombre = $_POST["txtNombre"];
-    $correo = $_POST["txtCorreo"];
-    $identificacion = $_POST["txtIdentificacion"];
-    $contrasenna = $_POST["txtContrasenna"];
 
-    $respuesta = RegistrarUsuarioModel($nombre, $correo, $identificacion, $contrasenna);
+    $identificacion = trim($_POST["txtIdentificacion"]);
+    $nombre         = trim($_POST["txtNombre"]);
+    $apellido1      = trim($_POST["txtApellido1"]);
+    $apellido2      = trim($_POST["txtApellido2"]);
+    $correo         = trim($_POST["txtCorreo"]);
+    $contrasenna    = $_POST["txtContrasenna"];
 
-    if ($respuesta) {
-        header("location: ../../Views/Home/login.php");
+    // Validar campos obligatorios
+    if ($identificacion === "" || $nombre === "" || $apellido1 === "" || $apellido2 === "" || $correo === "" || $contrasenna === "") {
+        $_POST["txtMensaje"] = "Todos los campos son obligatorios.";
     } else {
-        $_POST["txtMensaje"] = "Su información no fue registrada correctamente.";
+
+        $resultado = RegistrarUsuarioModel($nombre, $apellido1, $apellido2, $correo, $identificacion, $contrasenna);
+
+        if ($resultado) {
+            header("location: ../../Views/Home/login.php");
+            exit();
+        } else {
+            $_POST["txtMensaje"] = "El usuario no pudo ser registrado.";
+        }
     }
 }
 
+/* ============================================================
+    RECUPERAR ACCESO (ENVIAR CONTRASEÑA TEMPORAL)
+============================================================ */
 if (isset($_POST["btnRecuperarAcceso"])) {
+
     $correo = $_POST["txtCorreo"];
+    $fila = ValidarCorreoModel($correo);
 
-    $respuesta = ValidarCorreoModel($correo);
+    if ($fila) {
 
-    if ($respuesta != null && $respuesta->num_rows > 0) {
-        $datos = mysqli_fetch_array($respuesta);
+        $contrasennaTemporal = generarContrasena();
+        $ok = ActualizarContrasennaModel($fila["ID_USUARIO"], $contrasennaTemporal);
 
-        $contrasenna = generarContrasena();
-
-        $respuestaActualizacion = ActualizarContrasennaModel($datos["IdUsuario"], $contrasenna);
-
-        if ($respuestaActualizacion) {
+        if ($ok) {
             $mensaje = "<html><body>
-                Estimado(a) " . $datos["Nombre"] . "<br><br>
-                Se ha generado el siguiente código de seguridad:" . $contrasenna . "<br>
-                Recuerde realizar el cambio de contraseña una vez que ingrese al sistema.
-                </body></html>";
+                        Estimado(a) " . $fila["NOMBRE"] . "<br><br>
+                        Nuevo código de acceso: <b>$contrasennaTemporal</b><br>
+                        Cámbielo después de ingresar al sistema.
+                        </body></html>";
 
-            $respuestaCorreo = EnviarCorreo('Recuperar Acceso', $mensaje, $correo);
+            EnviarCorreo("Recuperar Acceso", $mensaje, $correo);
 
-            if ($respuestaCorreo) {
-                header("location: ../../Views/Home/login.php");
-            }
+            header("location: ../../Views/Home/login.php");
+            exit();
         }
     }
 
-    $_POST["txtMensaje"] = "Su acceso no fue recuperado correctamente.";
+    $_POST["txtMensaje"] = "No se pudo recuperar el acceso.";
 }
 
+/* ============================================================
+    CERRAR SESIÓN
+============================================================ */
 if (isset($_POST["btnCerrarSesion"])) {
     session_destroy();
     header("location: ../../Views/Home/login.php");
+    exit();
 }
-
 ?>

@@ -1,18 +1,36 @@
 <?php
-include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/connect.php';
+require_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/conexionOracle.php';
 
 function ConsultarInfoUsuarioModel($idUsuario)
 {
     try {
-        $context = OpenDB();
+        $conn = conectarOracle();
 
-        $sp = "CALL ConsultarInfoUsuario('$idUsuario')";
-        $respuesta = $context->query($sp);
+        // Preparar llamada al procedimiento
+        $sql = "BEGIN ConsultarInfoUsuario(:pIdUsuario, :resultado); END;";
+        $stmt = oci_parse($conn, $sql);
 
-        CloseDB($context);
-        return $respuesta;
-    } catch (Exception $error) {
-        RegistrarError($error);
+        // Bind de entrada
+        oci_bind_by_name($stmt, ":pIdUsuario", $idUsuario);
+
+        // Cursor de salida
+        $cursor = oci_new_cursor($conn);
+        oci_bind_by_name($stmt, ":resultado", $cursor, -1, OCI_B_CURSOR);
+
+        // Ejecutar
+        oci_execute($stmt);
+        oci_execute($cursor);
+
+        // Obtener resultado
+        $datos = oci_fetch_assoc($cursor);
+
+        oci_free_statement($stmt);
+        oci_free_statement($cursor);
+        oci_close($conn);
+
+        return $datos;
+
+    } catch (Exception $e) {
         return null;
     }
 }
@@ -20,17 +38,25 @@ function ConsultarInfoUsuarioModel($idUsuario)
 function ActualizarPerfilUsuarioModel($idUsuario, $nombre, $correo, $identificacion)
 {
     try {
-        $context = OpenDB();
+        $conn = conectarOracle();
 
-        $sp = "CALL ActualizarPerfilUsuario('$idUsuario', '$nombre', '$correo', '$identificacion')";
-        $respuesta = $context->query($sp);
+        $sql = "BEGIN ActualizarPerfilUsuario(:idUser, :nom, :cor, :ident); END;";
+        $stmt = oci_parse($conn, $sql);
 
-        CloseDB($context);
-        return $respuesta;
-    } catch (Exception $error) {
-        RegistrarError($error);
+        oci_bind_by_name($stmt, ":idUser", $idUsuario);
+        oci_bind_by_name($stmt, ":nom", $nombre);
+        oci_bind_by_name($stmt, ":cor", $correo);
+        oci_bind_by_name($stmt, ":ident", $identificacion);
+
+        $ok = oci_execute($stmt);
+
+        oci_free_statement($stmt);
+        oci_close($conn);
+
+        return $ok;
+
+    } catch (Exception $e) {
         return false;
     }
 }
-
 ?>
