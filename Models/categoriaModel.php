@@ -1,93 +1,154 @@
 <?php
-include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/connect.php';
+require_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/conexionOracle.php';
 
+/* ============================================================
+   LISTAR CATEGORÍAS
+   SP Oracle:  sp_consulta_categorias(resultado OUT SYS_REFCURSOR)
+============================================================ */
 function ListarCategoriasModel()
 {
     try {
-        $cn = OpenDB();
-        $result = $cn->query("CALL sp_consulta_categorias()");
-        $rows = $result->fetch_all(MYSQLI_ASSOC);
-        CloseDB($cn);
-        return $rows;
-    } catch (Exception $error) {
-        RegistrarError($error);
-        return [];  // array vacío en caso de falla
-    }
-}
+        $conn = conectarOracle();
+        $sql = "BEGIN sp_consulta_categorias(:res); END;";
+        $stmt = oci_parse($conn, $sql);
 
-function RegistrarCategoriaModel($descripcion, $ruta_imagen)
-{
-    try {
-        $cn = OpenDB();
-        // Escapamos solo los valores
-        $desc_esc = $cn->real_escape_string($descripcion);
-        $img_esc = $cn->real_escape_string($ruta_imagen);
-        // Construimos el CALL con las comillas fuera del escape
-        $sql = "CALL sp_insert_categoria('$desc_esc', '$img_esc')";
-        $ok = $cn->query($sql);
-        CloseDB($cn);
-        return $ok;
-    } catch (Exception $error) {
-        RegistrarError($error);
-        return false;
-    }
-}
+        $cursor = oci_new_cursor($conn);
+        oci_bind_by_name($stmt, ":res", $cursor, -1, OCI_B_CURSOR);
 
-function EditarCategoriaModel($id, $descripcion, $ruta_imagen, $activo)
-{
-    try {
-        $cn = OpenDB();
+        oci_execute($stmt);
+        oci_execute($cursor);
 
-        // Escapamos valores
-        $id_esc = intval($id);
-        $desc_esc = $cn->real_escape_string($descripcion);
-        $img_esc = $cn->real_escape_string($ruta_imagen);
-        $act_esc = intval($activo);
+        $lista = [];
+        while ($fila = oci_fetch_assoc($cursor)) {
+            // Convertir todas las claves a minúsculas
+            $lista[] = array_change_key_case($fila, CASE_LOWER);
+        }
 
-        // Construimos la llamada al SP
-        $sql = "CALL EditarCategoria($id_esc, '$desc_esc', '$img_esc', $act_esc)";
-        $ok = $cn->query($sql);
+        oci_free_statement($stmt);
+        oci_free_statement($cursor);
+        oci_close($conn);
 
-        CloseDB($cn);
-        return $ok;
-    } catch (Exception $error) {
-        RegistrarError($error);
-        return false;
-    }
-}
+        return $lista;
 
-function EliminarCategoriaModel($id)
-{
-    try {
-        $cn = OpenDB();
-
-        $id_esc = intval($id);
-
-        // Borrado lógico (usa tu SP EliminarCategoria)
-        $sql = "CALL EliminarCategoria($id_esc)";
-        $ok = $cn->query($sql);
-
-        CloseDB($cn);
-        return $ok;
-    } catch (Exception $error) {
-        RegistrarError($error);
-        return false;
-    }
-}
-
-function ListarProductosPorCategoriaModel($idCategoria) {
-    try {
-        $cn = OpenDB();
-        $id_esc = intval($idCategoria);
-        $sql = "CALL sp_consulta_productos($id_esc)";
-        $result = $cn->query($sql);
-        $rows = $result->fetch_all(MYSQLI_ASSOC);
-        CloseDB($cn);
-        return $rows;
-    } catch (Exception $error) {
-        RegistrarError($error);
+    } catch (Exception $e) {
         return [];
     }
 }
 
 
+
+/* ============================================================
+   REGISTRAR CATEGORÍA
+   SP Oracle: sp_insert_categoria(pDesc, pImagen)
+============================================================ */
+function RegistrarCategoriaModel($descripcion, $ruta_imagen)
+{
+    try {
+        $conn = conectarOracle();
+        $sql = "BEGIN sp_insert_categoria(:d, :img); END;";
+        $stmt = oci_parse($conn, $sql);
+
+        oci_bind_by_name($stmt, ":d",   $descripcion);
+        oci_bind_by_name($stmt, ":img", $ruta_imagen);
+
+        $ok = oci_execute($stmt);
+
+        oci_free_statement($stmt);
+        oci_close($conn);
+
+        return $ok;
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
+
+/* ============================================================
+   EDITAR CATEGORÍA
+   SP Oracle:  EditarCategoria(pId, pDesc, pImagen, pActivo)
+============================================================ */
+function EditarCategoriaModel($id, $descripcion, $ruta_imagen, $activo)
+{
+    try {
+        $conn = conectarOracle();
+        $sql = "BEGIN EditarCategoria(:id, :d, :img, :act); END;";
+        $stmt = oci_parse($conn, $sql);
+
+        oci_bind_by_name($stmt, ":id",  $id);
+        oci_bind_by_name($stmt, ":d",   $descripcion);
+        oci_bind_by_name($stmt, ":img", $ruta_imagen);
+        oci_bind_by_name($stmt, ":act", $activo);
+
+        $ok = oci_execute($stmt);
+
+        oci_free_statement($stmt);
+        oci_close($conn);
+        return $ok;
+
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
+
+/* ============================================================
+   ELIMINAR CATEGORÍA (Borrado lógico)
+   SP Oracle: EliminarCategoria(pId)
+============================================================ */
+function EliminarCategoriaModel($id)
+{
+    try {
+        $conn = conectarOracle();
+        $sql = "BEGIN EliminarCategoria(:id); END;";
+        $stmt = oci_parse($conn, $sql);
+
+        oci_bind_by_name($stmt, ":id", $id);
+
+        $ok = oci_execute($stmt);
+
+        oci_free_statement($stmt);
+        oci_close($conn);
+        return $ok;
+
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
+
+/* ============================================================
+   LISTAR PRODUCTOS POR CATEGORÍA
+   SP Oracle: sp_consulta_productos(pCat, resultado OUT SYS_REFCURSOR)
+============================================================ */
+function ListarProductosPorCategoriaModel($idCategoria)
+{
+    try {
+        $conn = conectarOracle();
+        $sql = "BEGIN sp_consulta_productos(:cat, :res); END;";
+        $stmt = oci_parse($conn, $sql);
+
+        oci_bind_by_name($stmt, ":cat", $idCategoria);
+
+        $cursor = oci_new_cursor($conn);
+        oci_bind_by_name($stmt, ":res", $cursor, -1, OCI_B_CURSOR);
+
+        oci_execute($stmt);
+        oci_execute($cursor);
+
+        $lista = [];
+        while ($fila = oci_fetch_assoc($cursor)) {
+            $lista[] = $fila;
+        }
+
+        oci_free_statement($stmt);
+        oci_free_statement($cursor);
+        oci_close($conn);
+
+        return $lista;
+
+    } catch (Exception $e) {
+        return [];
+    }
+}
+
+?>

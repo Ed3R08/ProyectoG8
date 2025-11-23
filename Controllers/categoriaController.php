@@ -1,16 +1,15 @@
 <?php
 include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/CategoriaModel.php';
 
-
 class CategoriaController
 {
     // Muestra formulario de registro
     public static function create(): void
     {
-        require $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/Categoria/registro.php';
+        require $_SERVER["DOCUMENTORY"] . '/ProyectoG8/Views/Categoria/registro.php';
     }
 
-    // Procesa POST de registro
+    // Registrar categoría
     public static function store(): void
     {
         if (!isset($_POST['descripcion'])) {
@@ -18,41 +17,89 @@ class CategoriaController
             exit;
         }
 
-        $ok = RegistrarCategoriaModel(
-            trim($_POST['descripcion']),
-            trim($_POST['ruta_imagen'])
-        );
+        $descripcion = trim($_POST['descripcion']);
+        $rutaImagen = null;
 
-        header('Location: ' . ($ok ? 'registro.php?ok=1' : 'registro.php?err=db'));
+        // SUBIR IMAGEN
+        if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+
+            $dir = $_SERVER["DOCUMENT_ROOT"] . "/ProyectoG8/Uploads/categorias/";
+
+            if (!file_exists($dir)) {
+                mkdir($dir, 0777, true);
+            }
+
+            $ext = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
+            $nombreFinal = uniqid("cat_") . "." . $ext;
+
+            $rutaFisica = $dir . $nombreFinal;
+            $rutaWeb    = "/ProyectoG8/Uploads/categorias/" . $nombreFinal;
+
+            if (move_uploaded_file($_FILES['imagen']['tmp_name'], $rutaFisica)) {
+                $rutaImagen = $rutaWeb;
+            }
+        }
+
+        $ok = RegistrarCategoriaModel($descripcion, $rutaImagen);
+
+        header('Location: registro.php?' . ($ok ? 'ok=1' : 'err=db'));
         exit;
     }
 
-    // Muestra listado de categorías
+    // Listar categorías
     public static function index(): void
     {
         $categorias = ListarCategoriasModel();
         require $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/Categoria/listado.php';
     }
-
-
 }
+
+
+// =============================================
+// EDITAR CATEGORÍA
+// =============================================
 if (isset($_GET['action']) && $_GET['action'] === 'editar' && isset($_POST['btnEditarCategoria'])) {
+
     $id = $_POST['id'];
     $descripcion = $_POST['descripcion'];
-    $ruta_imagen = $_POST['ruta_imagen'];
-    $activo = isset($_POST['activo']) ? 1 : 0; // Si está chequeado es 1, si no es 0
+    $ruta_actual = $_POST['ruta_actual'];
+    $ruta_nueva = $ruta_actual; // Si no sube imagen nueva → se mantiene
 
-    $resultado = EditarCategoriaModel($id, $descripcion, $ruta_imagen, $activo);
+    // ¿Subió una nueva imagen?
+    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+
+        $dir = $_SERVER["DOCUMENT_ROOT"] . "/ProyectoG8/Uploads/categorias/";
+
+        if (!file_exists($dir)) {
+            mkdir($dir, 0777, true);
+        }
+
+        $ext = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
+        $nombreFinal = uniqid("cat_") . "." . $ext;
+
+        $rutaFisica = $dir . $nombreFinal;
+        $rutaWeb = "/ProyectoG8/Uploads/categorias/" . $nombreFinal;
+
+        if (move_uploaded_file($_FILES['imagen']['tmp_name'], $rutaFisica)) {
+            $ruta_nueva = $rutaWeb;
+        }
+    }
+
+    // activo = 1 siempre (por ahora no usamos inactivos)
+    $resultado = EditarCategoriaModel($id, $descripcion, $ruta_nueva, 1);
 
     if ($resultado) {
-        header("Location: ../Views/Categoria/listado.php?msg=Categoría actualizada correctamente");
+        header("Location: ../Views/Categoria/listado.php?msg=Categoria_actualizada");
         exit();
     } else {
         echo "Error al actualizar la categoría.";
     }
 }
 
+
+// =============================================
 // ELIMINAR CATEGORÍA
+// =============================================
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_POST["accion"]) && $_POST["accion"] === "eliminar") {
         if (!empty($_POST["id"]) && is_numeric($_POST["id"])) {
@@ -70,4 +117,3 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 }
-

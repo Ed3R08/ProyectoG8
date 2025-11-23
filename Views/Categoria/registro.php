@@ -27,17 +27,20 @@ if (isset($_POST['btnGuardar'])) {
           <div class="alert alert-danger">Error al registrar categoría.</div>
         <?php endif; ?>
 
-        <form method="post" class="mt-4">
+        <form method="post" enctype="multipart/form-data" class="mt-4">
           <div class="form-group">
             <label>Descripción</label>
             <input type="text" name="descripcion" class="form-control" required>
           </div>
+
           <div class="form-group">
-            <label>Ruta de la Imagen</label>
-            <input type="url" name="ruta_imagen" class="form-control">
+            <label>Imagen (PNG/JPG)</label>
+            <input type="file" name="imagen" accept="image/*" class="form-control">
           </div>
+
           <button name="btnGuardar" class="btn btn-primary">Guardar</button>
         </form>
+
       </div>
     </div>
   </div>

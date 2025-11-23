@@ -26,38 +26,45 @@ if ($id !== null) {
 <?php AddCss(); ?>
 
 <body>
-    <h1>Editar categoría</h1>
+    <div id="main-wrapper">
+        <?php ShowHeader(); ShowMenu(); ?>
+        <div class="page-wrapper">
+            <div class="container-fluid">
 
-    <?php if ($categoria): ?>
-        <form action="../../Controllers/categoriaController.php?action=editar" method="post" class="mt-4">
-            <input type="hidden" name="id" value="<?= htmlspecialchars($categoria['id_categoria']) ?>">
+                <h3>Editar Categoría</h3>
 
-            <label>Descripción</label>
-            <input type="text" name="descripcion" class="form-control"
-                value="<?= htmlspecialchars($categoria['descripcion']) ?>" required>
+                <?php if ($categoria): ?>
+                    <form action="../../Controllers/categoriaController.php?action=editar"
+                          method="post"
+                          enctype="multipart/form-data"
+                          class="mt-4">
 
-            <label>URL Imagen</label>
-            <input type="text" name="ruta_imagen" class="form-control"
-                value="<?= htmlspecialchars($categoria['ruta_imagen']) ?>">
+                        <input type="hidden" name="id" value="<?= htmlspecialchars($categoria['id_categoria']) ?>">
+                        <input type="hidden" name="ruta_actual" value="<?= htmlspecialchars($categoria['ruta_imagen']) ?>">
 
-            <?php
-            $activo = isset($_POST['activo']) ? $_POST['activo'] : (isset($categoria['activo']) ? $categoria['activo'] : 0);
-            ?>
-            <label>Activo</label>
-            <select name="activo" class="form-control">
-                <option value="1" <?= ($activo == 1 ? 'selected' : '') ?>>Sí</option>
-                <option value="0" <?= ($activo == 0 ? 'selected' : '') ?>>No</option>
-            </select>
+                        <label>Descripción</label>
+                        <input type="text" name="descripcion" class="form-control"
+                               value="<?= htmlspecialchars($categoria['descripcion']) ?>" required>
 
-            <button name="btnEditarCategoria" type="submit" class="btn btn-success mt-3">Guardar</button>
-        </form>
-    <?php else: ?>
-        <p class="text-danger">Categoría no encontrada.</p>
-    <?php endif; ?>
+                        <br>
+                        <label>Imagen actual</label><br>
+                        <?php if (!empty($categoria['ruta_imagen'])): ?>
+                            <img src="<?= $categoria['ruta_imagen'] ?>" style="height:60px; border-radius:5px;">
+                        <?php endif; ?>
 
+                        <br><br>
+                        <label>Subir nueva imagen (opcional)</label>
+                        <input type="file" name="imagen" class="form-control">
 
+                        <button name="btnEditarCategoria" type="submit" class="btn btn-success mt-3">Guardar</button>
+                    </form>
+                <?php else: ?>
+                    <p class="text-danger">Categoría no encontrada.</p>
+                <?php endif; ?>
 
-    <?php AddJs(); ?>
+                <?php AddJs(); ?>
+            </div>
+        </div>
+    </div>
 </body>
-
 </html>
