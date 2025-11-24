@@ -1,106 +1,161 @@
 <?php
-include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/connect.php';
+// Models/productoModel.php
+require_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/conexionOracle.php';
 
 /**
- * Drena todos los resultsets pendientes de una llamada a CALL ...;
- * Evita "Commands out of sync".
+ * Normaliza las claves del array a minúsculas
  */
-function _drainResults(mysqli $cn)
+function normalizarFilaOracle($fila)
 {
-    while ($cn->more_results() && $cn->next_result()) {
-        if ($rs = $cn->use_result()) {
-            $rs->free();
-        }
-    }
+    return array_change_key_case($fila, CASE_LOWER);
 }
 
-function ListarProductosModel($idCategoria = null)
+/* ============================================================
+   LISTAR TODOS LOS PRODUCTOS (usa sp_consulta_productos_all)
+============================================================ */
+function ListarProductosModel()
 {
     try {
-        $cn = OpenDB();
+        $conn = conectarOracle();
 
-        if ($idCategoria !== null) {
-            $idCat = (int) $idCategoria;
-            $rs = $cn->query("CALL sp_consulta_productos($idCat)");
-        } else {
-            $rs = $cn->query("CALL sp_consulta_productos_all()");
+        $sql = "SELECT 
+                    id_producto,
+                    id_categoria,
+                    nombre,
+                    detalle,
+                    precio,
+                    cantidad AS existencias,
+                    estado,
+                    ruta_imagen
+                FROM producto
+                ORDER BY nombre";
+                    
+        $stmt = oci_parse($conn, $sql);
+
+        oci_execute($stmt);
+
+        $lista = [];
+        while ($fila = oci_fetch_assoc($stmt)) {
+            $lista[] = normalizarFilaOracle($fila);
         }
 
-        $rows = [];
-        if ($rs) {
-            $rows = $rs->fetch_all(MYSQLI_ASSOC);
-            $rs->free();
-        }
-        _drainResults($cn);
-        CloseDB($cn);
-        return $rows;
+        oci_free_statement($stmt);
+        oci_close($conn);
+
+        return $lista;
+
     } catch (Exception $e) {
-        RegistrarError($e);
         return [];
     }
 }
 
-function RegistrarProductoModel($idCategoria, $nombre, $detalle, $precio, $stock, $rutaImagen)
+
+
+/* ============================================================
+   REGISTRAR PRODUCTO (sp_insert_producto)
+============================================================ */
+function RegistrarProductoModel($idCategoria, $nombre, $detalle, $precio, $existencias, $ruta_imagen)
 {
     try {
-        $cn = OpenDB();
-        $cat = (int) $idCategoria;
-        $nom = $cn->real_escape_string($nombre);
-        $det = $cn->real_escape_string($detalle);
-        $precioVal = (float) $precio;
-        $stk = (int) $stock;
-        $img = $cn->real_escape_string((string) $rutaImagen);
+        $conn = conectarOracle();
 
-        $sql = "CALL sp_insert_producto($cat, '$nom', '$det', $precioVal, $stk, '$img')";
-        $ok = $cn->query($sql);
+        $sql = "BEGIN sp_insert_producto(:cat, :nom, :det, :pre, :cant, :img); END;";
+        $stmt = oci_parse($conn, $sql);
 
-        _drainResults($cn);
-        CloseDB($cn);
-        return (bool) $ok;
+        oci_bind_by_name($stmt, ":cat",  $idCategoria);
+        oci_bind_by_name($stmt, ":nom",  $nombre);
+        oci_bind_by_name($stmt, ":det",  $detalle);
+        oci_bind_by_name($stmt, ":pre",  $precio);
+        oci_bind_by_name($stmt, ":cant", $existencias);
+        oci_bind_by_name($stmt, ":img",  $ruta_imagen);
+
+        $ok = oci_execute($stmt);
+
+        oci_free_statement($stmt);
+        oci_close($conn);
+
+        return $ok;
+
     } catch (Exception $e) {
-        RegistrarError($e);
         return false;
     }
 }
 
-function ActualizarProductoModel($id, $idCategoria, $nombre, $detalle, $precio, $existencias, $ruta_imagen)
+/* ============================================================
+   ACTUALIZAR PRODUCTO (EditarProducto)
+============================================================ */
+function ActualizarProductoModel($idProducto, $idCategoria, $nombre, $detalle, $precio, $existencias, $ruta_imagen)
 {
     try {
-        $cn = OpenDB();
-        $idProd = (int) $id;
-        $idCat = (int) $idCategoria;
-        $nom = $cn->real_escape_string($nombre);
-        $det = $cn->real_escape_string($detalle);
-        $precioVal = (float) $precio;
-        $existVal = (int) $existencias;
-        $ruta = $cn->real_escape_string((string) $ruta_imagen);
+        $conn = conectarOracle();
 
-        $sql = "CALL EditarProducto($idProd, $idCat, '$nom', '$det', $precioVal, $existVal, '$ruta')";
-        $ok = $cn->query($sql);
-        if (!$ok) {
-            throw new Exception("Error MySQL: " . $cn->error);
-        }
+        $sql = "BEGIN EditarProducto(:id, :cat, :nom, :det, :pre, :cant, :img); END;";
+        $stmt = oci_parse($conn, $sql);
 
-        _drainResults($cn);
-        CloseDB($cn);
-        return true;
-    } catch (Exception $error) {
-        RegistrarError($error);
-        return false;
-    }
-}
+        oci_bind_by_name($stmt, ":id",   $idProducto);
+        oci_bind_by_name($stmt, ":cat",  $idCategoria);
+        oci_bind_by_name($stmt, ":nom",  $nombre);
+        oci_bind_by_name($stmt, ":det",  $detalle);
+        oci_bind_by_name($stmt, ":pre",  $precio);
+        oci_bind_by_name($stmt, ":cant", $existencias);
+        oci_bind_by_name($stmt, ":img",  $ruta_imagen);
 
-function EliminarProductoModel($id)
-{
-    try {
-        $cn = OpenDB();
-        $idProd = (int) $id;
-        $ok = $cn->query("CALL EliminarProducto($idProd)");
-        _drainResults($cn);
-        CloseDB($cn);
-        return (bool) $ok;
+        $ok = oci_execute($stmt);
+
+        oci_free_statement($stmt);
+        oci_close($conn);
+
+        return $ok;
+
     } catch (Exception $e) {
-        RegistrarError($e);
         return false;
     }
 }
+
+/* ============================================================
+   ELIMINAR PRODUCTO (lógico: estado=0)
+============================================================ */
+function EliminarProductoModel($idProducto)
+{
+    try {
+        $conn = conectarOracle();
+
+        $sql = "BEGIN EliminarProducto(:id); END;";
+        $stmt = oci_parse($conn, $sql);
+
+        oci_bind_by_name($stmt, ":id", $idProducto);
+
+        $ok = oci_execute($stmt);
+
+        oci_free_statement($stmt);
+        oci_close($conn);
+
+        return $ok;
+
+    } catch (Exception $e) {
+        return false;
+    }
+}
+function ActivarProductoModel($idProducto)
+{
+    try {
+        $conn = conectarOracle();
+
+        $sql = "BEGIN ActivarProducto(:id); END;";
+        $stmt = oci_parse($conn, $sql);
+
+        oci_bind_by_name($stmt, ":id", $idProducto);
+
+        $ok = oci_execute($stmt);
+
+        oci_free_statement($stmt);
+        oci_close($conn);
+
+        return $ok;
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
+
+?>

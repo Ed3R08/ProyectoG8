@@ -6,63 +6,111 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/CategoriaModel.php'
 
 class ProductoController
 {
-    /**
-     * Show the “Alta de Producto” form
-     */
+    // Mostrar formulario de registro
     public static function create(): void
     {
-        // Cargamos las categorías para el <select>
         $categorias = ListarCategoriasModel();
         require $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/Producto/registro.php';
     }
 
-    /**
-     * Procesa el POST del formulario de alta
-     * Redirige a registro.php?ok=1 o ?err=db
-     */
+    // Procesar alta de producto
     public static function store(): void
     {
-        // Validación básica de formulario
         if (!isset($_POST['categoria'], $_POST['nombre'], $_POST['precio'], $_POST['existencias'])) {
             header('Location: registro.php?err=form');
             exit;
         }
 
+        $idCategoria = intval($_POST['categoria']);
+        $nombre      = trim($_POST['nombre']);
+        $detalle     = trim($_POST['detalle'] ?? '');
+        $precio      = floatval($_POST['precio']);
+        $existencias = intval($_POST['existencias']);
+        $rutaImagen  = null;
+
+        // === Subida de imagen ===
+        if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+
+            $dir = $_SERVER["DOCUMENT_ROOT"] . "/ProyectoG8/Uploads/productos/";
+
+            if (!file_exists($dir)) {
+                mkdir($dir, 0777, true);
+            }
+
+            $ext = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
+            $nombreFinal = uniqid("prod_") . "." . $ext;
+
+            $rutaFisica = $dir . $nombreFinal;
+            $rutaWeb    = "/ProyectoG8/Uploads/productos/" . $nombreFinal;
+
+            if (move_uploaded_file($_FILES['imagen']['tmp_name'], $rutaFisica)) {
+                $rutaImagen = $rutaWeb;
+            }
+        }
+
         $ok = RegistrarProductoModel(
-            intval($_POST['categoria']),
-            trim($_POST['nombre']),
-            trim($_POST['detalle'] ?? ''),
-            floatval($_POST['precio']),
-            intval($_POST['existencias']),
-            trim($_POST['ruta_imagen'] ?? '')
+            $idCategoria,
+            $nombre,
+            $detalle,
+            $precio,
+            $existencias,
+            $rutaImagen
         );
 
-        // Redirigimos mostrando éxito o error
         header('Location: registro.php?' . ($ok ? 'ok=1' : 'err=db'));
         exit;
     }
 
-    /**
-     * Muestra el listado de productos
-     */
+    // Listado de productos
     public static function index(): void
     {
-        // Obtiene todos los productos
         $productos = ListarProductosModel();
         require $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/Producto/listado.php';
     }
 }
 
+// === EDITAR PRODUCTO ===
 if (isset($_GET['action']) && $_GET['action'] === 'editar' && isset($_POST['btnEditarProducto'])) {
-    $id = $_POST['id'];
-    $idCategoria = $_POST['idCategoria'];
-    $nombre = $_POST['nombre'];
-    $detalle = $_POST['detalle'];
-    $precio = $_POST['precio'];
-    $existencias = $_POST['existencias'];
-    $ruta_imagen = $_POST['ruta_imagen'];
 
-    $resultado = ActualizarProductoModel($id, $idCategoria, $nombre, $detalle, $precio, $existencias, $ruta_imagen);
+    $id          = $_POST['id'];
+    $idCategoria = $_POST['idCategoria'];
+    $nombre      = $_POST['nombre'];
+    $detalle     = $_POST['detalle'];
+    $precio      = $_POST['precio'];
+    $existencias = $_POST['existencias'];
+
+    // Ruta actual enviada en el form
+    $ruta_imagen = $_POST['ruta_imagen'] ?? null;
+
+    // Si viene una imagen nueva, la subimos y sustituimos la ruta
+    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+
+        $dir = $_SERVER["DOCUMENT_ROOT"] . "/ProyectoG8/Uploads/productos/";
+
+        if (!file_exists($dir)) {
+            mkdir($dir, 0777, true);
+        }
+
+        $ext = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
+        $nombreFinal = uniqid("prod_") . "." . $ext;
+
+        $rutaFisica = $dir . $nombreFinal;
+        $rutaWeb    = "/ProyectoG8/Uploads/productos/" . $nombreFinal;
+
+        if (move_uploaded_file($_FILES['imagen']['tmp_name'], $rutaFisica)) {
+            $ruta_imagen = $rutaWeb;
+        }
+    }
+
+    $resultado = ActualizarProductoModel(
+        $id,
+        $idCategoria,
+        $nombre,
+        $detalle,
+        $precio,
+        $existencias,
+        $ruta_imagen
+    );
 
     if ($resultado) {
         header("Location: ../Views/Producto/listado.php?msg=Producto actualizado correctamente");
@@ -71,20 +119,41 @@ if (isset($_GET['action']) && $_GET['action'] === 'editar' && isset($_POST['btnE
         echo "Error al actualizar el producto.";
     }
 }
+
+// === ELIMINAR / ACTIVAR PRODUCTO ===
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    if ($_POST["accion"] === "eliminar") {
-        if (!empty($_POST["id"]) && is_numeric($_POST["id"])) {
-            include_once "../Models/productoModel.php";
-            $id = intval($_POST["id"]);
-            $resultado = EliminarProductoModel($id);
-            if ($resultado) {
-                header("Location: ../Views/Producto/listado.php?msg=eliminado");
-                exit();
+    if (isset($_POST["accion"])) {
+
+        // DESACTIVAR (estado = 0)
+        if ($_POST["accion"] === "eliminar") {
+            if (!empty($_POST["id"]) && is_numeric($_POST["id"])) {
+                $id = intval($_POST["id"]);
+                $resultado = EliminarProductoModel($id); // hace estado = 0
+                if ($resultado) {
+                    header("Location: ../Views/Producto/listado.php?msg=desactivado");
+                    exit();
+                } else {
+                    echo "Error al desactivar el producto.";
+                }
             } else {
-                echo "Error al eliminar el producto.";
+                echo "ID inválido.";
             }
-        } else {
-            echo "ID inválido.";
+        }
+
+        // ACTIVAR (estado = 1)
+        if ($_POST["accion"] === "activar") {
+            if (!empty($_POST["id"]) && is_numeric($_POST["id"])) {
+                $id = intval($_POST["id"]);
+                $resultado = ActivarProductoModel($id);
+                if ($resultado) {
+                    header("Location: ../Views/Producto/listado.php?msg=activado");
+                    exit();
+                } else {
+                    echo "Error al activar el producto.";
+                }
+            } else {
+                echo "ID inválido.";
+            }
         }
     }
 }

@@ -10,7 +10,7 @@ if (isset($_POST['btnGuardar'])) {
 include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/CategoriaModel.php';
 $categorias = ListarCategoriasModel();
 
-// 2) Incluir el layout (cabecera, menú, etc.)
+// 2) Incluir el layout
 include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
 ?>
 <!DOCTYPE html>
@@ -25,7 +25,7 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
       <div class="container-fluid">
         <h3>Registrar Producto</h3>
 
-        <!-- Mensajes de éxito o error -->
+        <!-- Mensajes -->
         <?php if (isset($_GET['ok'])): ?>
           <div class="alert alert-<?= $_GET['ok'] == 1 ? 'success' : 'danger' ?>">
             <?= $_GET['ok'] == 1
@@ -34,7 +34,7 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
           </div>
         <?php endif; ?>
 
-        <form action="" method="post" class="mt-4">
+        <form action="" method="post" class="mt-4" enctype="multipart/form-data">
           <div class="form-group">
             <label>Categoría</label>
             <select name="categoria" class="form-control" required>
@@ -63,8 +63,8 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
             <input type="number" name="existencias" class="form-control" required>
           </div>
           <div class="form-group">
-            <label>Ruta de la Imagen</label>
-            <input type="text" name="ruta_imagen" class="form-control">
+            <label>Imagen</label>
+            <input type="file" name="imagen" class="form-control" accept="image/*">
           </div>
           <button name="btnGuardar" type="submit" class="btn btn-success">Guardar</button>
         </form>
