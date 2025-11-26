@@ -6,7 +6,7 @@ class CategoriaController
     // Muestra formulario de registro
     public static function create(): void
     {
-        require $_SERVER["DOCUMENTORY"] . '/ProyectoG8/Views/Categoria/registro.php';
+        require $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/Categoria/registro.php';
     }
 
     // Registrar categoría
@@ -46,7 +46,7 @@ class CategoriaController
         exit;
     }
 
-    // Listar categorías
+    // Listar categorías (solo activas para clientes)
     public static function index(): void
     {
         $categorias = ListarCategoriasModel();
@@ -55,17 +55,17 @@ class CategoriaController
 }
 
 
-// =============================================
-// EDITAR CATEGORÍA
-// =============================================
+/* ============================================================
+   EDITAR CATEGORÍA
+============================================================ */
 if (isset($_GET['action']) && $_GET['action'] === 'editar' && isset($_POST['btnEditarCategoria'])) {
 
     $id = $_POST['id'];
     $descripcion = $_POST['descripcion'];
     $ruta_actual = $_POST['ruta_actual'];
-    $ruta_nueva = $ruta_actual; // Si no sube imagen nueva → se mantiene
+    $ruta_nueva = $ruta_actual;
 
-    // ¿Subió una nueva imagen?
+    // Subir nueva imagen si existe
     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
 
         $dir = $_SERVER["DOCUMENT_ROOT"] . "/ProyectoG8/Uploads/categorias/";
@@ -85,7 +85,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'editar' && isset($_POST['btnE
         }
     }
 
-    // activo = 1 siempre (por ahora no usamos inactivos)
+    // Editar categoría (mantiene estado actual)
     $resultado = EditarCategoriaModel($id, $descripcion, $ruta_nueva, 1);
 
     if ($resultado) {
@@ -97,23 +97,41 @@ if (isset($_GET['action']) && $_GET['action'] === 'editar' && isset($_POST['btnE
 }
 
 
-// =============================================
-// ELIMINAR CATEGORÍA
-// =============================================
+/* ============================================================
+   ELIMINAR / DESACTIVAR CATEGORÍA
+============================================================ */
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    // DESACTIVAR
     if (isset($_POST["accion"]) && $_POST["accion"] === "eliminar") {
+
         if (!empty($_POST["id"]) && is_numeric($_POST["id"])) {
             $id = intval($_POST["id"]);
             $resultado = EliminarCategoriaModel($id);
 
             if ($resultado) {
-                header("Location: ../Views/Categoria/listado.php?msg=categoria_eliminada");
+                header("Location: ../Views/Categoria/listado.php?msg=categoria_desactivada");
                 exit();
             } else {
-                echo "Error al eliminar la categoría.";
+                echo "Error al desactivar categoría.";
             }
-        } else {
-            echo "ID inválido.";
+        }
+    }
+
+    // ACTIVAR
+    if (isset($_POST["accion"]) && $_POST["accion"] === "activar") {
+
+        if (!empty($_POST["id"]) && is_numeric($_POST["id"])) {
+            $id = intval($_POST["id"]);
+            $resultado = ActivarCategoriaModel($id);
+
+            if ($resultado) {
+                header("Location: ../Views/Categoria/listado.php?msg=categoria_activada");
+                exit();
+            } else {
+                echo "Error al activar categoría.";
+            }
         }
     }
 }
+

@@ -1,9 +1,9 @@
 <?php
 require_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/conexionOracle.php';
 
+
 /* ============================================================
-   LISTAR CATEGORÍAS
-   SP Oracle:  sp_consulta_categorias(resultado OUT SYS_REFCURSOR)
+   LISTAR SOLO CATEGORÍAS ACTIVAS
 ============================================================ */
 function ListarCategoriasModel()
 {
@@ -20,14 +20,43 @@ function ListarCategoriasModel()
 
         $lista = [];
         while ($fila = oci_fetch_assoc($cursor)) {
-            // Convertir todas las claves a minúsculas
             $lista[] = array_change_key_case($fila, CASE_LOWER);
         }
 
         oci_free_statement($stmt);
         oci_free_statement($cursor);
         oci_close($conn);
+        return $lista;
 
+    } catch (Exception $e) {
+        return [];
+    }
+}
+
+/* ============================================================
+   LISTAR TODAS LAS CATEGORÍAS (ADMIN)
+============================================================ */
+function ListarCategoriasAdminModel()
+{
+    try {
+        $conn = conectarOracle();
+        $sql = "BEGIN sp_consulta_categorias_admin(:res); END;";
+        $stmt = oci_parse($conn, $sql);
+
+        $cursor = oci_new_cursor($conn);
+        oci_bind_by_name($stmt, ":res", $cursor, -1, OCI_B_CURSOR);
+
+        oci_execute($stmt);
+        oci_execute($cursor);
+
+        $lista = [];
+        while ($fila = oci_fetch_assoc($cursor)) {
+            $lista[] = array_change_key_case($fila, CASE_LOWER);
+        }
+
+        oci_free_statement($stmt);
+        oci_free_statement($cursor);
+        oci_close($conn);
         return $lista;
 
     } catch (Exception $e) {
@@ -36,10 +65,8 @@ function ListarCategoriasModel()
 }
 
 
-
 /* ============================================================
    REGISTRAR CATEGORÍA
-   SP Oracle: sp_insert_categoria(pDesc, pImagen)
 ============================================================ */
 function RegistrarCategoriaModel($descripcion, $ruta_imagen)
 {
@@ -55,8 +82,8 @@ function RegistrarCategoriaModel($descripcion, $ruta_imagen)
 
         oci_free_statement($stmt);
         oci_close($conn);
-
         return $ok;
+
     } catch (Exception $e) {
         return false;
     }
@@ -65,7 +92,6 @@ function RegistrarCategoriaModel($descripcion, $ruta_imagen)
 
 /* ============================================================
    EDITAR CATEGORÍA
-   SP Oracle:  EditarCategoria(pId, pDesc, pImagen, pActivo)
 ============================================================ */
 function EditarCategoriaModel($id, $descripcion, $ruta_imagen, $activo)
 {
@@ -92,8 +118,7 @@ function EditarCategoriaModel($id, $descripcion, $ruta_imagen, $activo)
 
 
 /* ============================================================
-   ELIMINAR CATEGORÍA (Borrado lógico)
-   SP Oracle: EliminarCategoria(pId)
+   DESACTIVAR CATEGORÍA
 ============================================================ */
 function EliminarCategoriaModel($id)
 {
@@ -117,8 +142,31 @@ function EliminarCategoriaModel($id)
 
 
 /* ============================================================
+   ACTIVAR CATEGORÍA
+============================================================ */
+function ActivarCategoriaModel($id)
+{
+    try {
+        $conn = conectarOracle();
+        $sql = "BEGIN ActivarCategoria(:id); END;";
+        $stmt = oci_parse($conn, $sql);
+
+        oci_bind_by_name($stmt, ":id", $id);
+
+        $ok = oci_execute($stmt);
+
+        oci_free_statement($stmt);
+        oci_close($conn);
+        return $ok;
+
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
+
+/* ============================================================
    LISTAR PRODUCTOS POR CATEGORÍA
-   SP Oracle: sp_consulta_productos(pCat, resultado OUT SYS_REFCURSOR)
 ============================================================ */
 function ListarProductosPorCategoriaModel($idCategoria)
 {
@@ -137,7 +185,7 @@ function ListarProductosPorCategoriaModel($idCategoria)
 
         $lista = [];
         while ($fila = oci_fetch_assoc($cursor)) {
-            $lista[] = $fila;
+            $lista[] = array_change_key_case($fila, CASE_LOWER);
         }
 
         oci_free_statement($stmt);
@@ -150,5 +198,3 @@ function ListarProductosPorCategoriaModel($idCategoria)
         return [];
     }
 }
-
-?>
