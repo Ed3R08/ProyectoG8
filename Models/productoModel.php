@@ -18,28 +18,22 @@ function ListarProductosModel()
     try {
         $conn = conectarOracle();
 
-        $sql = "SELECT 
-                    id_producto,
-                    id_categoria,
-                    nombre,
-                    detalle,
-                    precio,
-                    cantidad AS existencias,
-                    estado,
-                    ruta_imagen
-                FROM producto
-                ORDER BY nombre";
-                    
+        $sql = "BEGIN sp_consulta_productos_all(:cur); END;";
         $stmt = oci_parse($conn, $sql);
 
+        $cursor = oci_new_cursor($conn);
+        oci_bind_by_name($stmt, ":cur", $cursor, -1, OCI_B_CURSOR);
+
         oci_execute($stmt);
+        oci_execute($cursor);
 
         $lista = [];
-        while ($fila = oci_fetch_assoc($stmt)) {
-            $lista[] = normalizarFilaOracle($fila);
+        while ($fila = oci_fetch_assoc($cursor)) {
+            $lista[] = array_change_key_case($fila, CASE_LOWER);
         }
 
         oci_free_statement($stmt);
+        oci_free_statement($cursor);
         oci_close($conn);
 
         return $lista;
@@ -48,7 +42,6 @@ function ListarProductosModel()
         return [];
     }
 }
-
 
 
 /* ============================================================

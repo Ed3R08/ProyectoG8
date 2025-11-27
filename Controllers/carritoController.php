@@ -12,13 +12,13 @@ if (!isset($_SESSION['Nombre']) || !isset($_SESSION['IdRol']) || $_SESSION['IdRo
 }
 
 $usuario_id = $_SESSION['IdUsuario'] ?? null;
-
 $accion = $_GET['accion'] ?? '';
 
 switch ($accion) {
+
     case 'agregar':
         $producto_id = $_POST['producto_id'] ?? null;
-        $cantidad = $_POST['cantidad'] ?? 1;
+        $cantidad    = $_POST['cantidad'] ?? 1;
 
         $respuesta = ['success' => false, 'message' => 'No se pudo agregar el producto'];
 
@@ -29,21 +29,20 @@ switch ($accion) {
             }
         }
 
-        // Responder siempre en JSON para AJAX
         header('Content-Type: application/json');
         echo json_encode($respuesta);
-        exit; // importantísimo para que no se haga la redirección
-        break;
+        exit;
 
     case 'actualizar':
-        $carrito_id = $_POST['carrito_id'] ?? null;
+        $carrito_id     = $_POST['carrito_id'] ?? null;
         $nueva_cantidad = $_POST['nueva_cantidad'] ?? 1;
 
         if ($carrito_id) {
             CarritoModel::actualizar($carrito_id, $nueva_cantidad);
         }
+
         header("Location: ../Views/Carrito/verCarrito.php");
-        break;
+        exit;
 
     case 'eliminar':
         $carrito_id = $_POST['carrito_id'] ?? null;
@@ -51,19 +50,23 @@ switch ($accion) {
         if ($carrito_id) {
             CarritoModel::eliminar($carrito_id);
         }
+
         header("Location: ../Views/Carrito/verCarrito.php");
-        break;
+        exit;
 
     case 'finalizar':
         if ($usuario_id) {
-            CarritoModel::finalizarCompra($usuario_id);
-           header("Location: /ProyectoG8/Views/Carrito/factura.php?id=".$idCompra);
+            $ok = CarritoModel::finalizarCompra($usuario_id);
 
-            exit();
+            // si quieres podrías validar $ok y mandar a una página de error
+            header("Location: /ProyectoG8/Views/Carrito/factura.php");
+            exit;
         }
-        break;
+
+        header("Location: ../Views/Home/principal.php");
+        exit;
 
     default:
         header("Location: ../Views/Home/principal.php");
-        break;
+        exit;
 }
