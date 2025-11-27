@@ -50,6 +50,8 @@ foreach ($filas as $r) {
 <meta charset="UTF-8">
 <title>Historial de Compras</title>
 <link rel="stylesheet" href="../Estilos/style.css">
+<!-- FAVICON -->
+<link rel="icon" type="image/png" sizes="32x32" href="../Imagenes/favicon.png">
 <style>
 .container{max-width:1000px;margin:20px auto}
 table{width:100%;border-collapse:collapse}
