@@ -45,6 +45,7 @@ $resultado = ConsultarInfoUsuario($idUsuario);
                                 }
                                 ?>
 
+                                <!-- IDENTIFICACIÓN -->
                                 <div class="form-group row">
                                     <label class="col-sm-3 text-right control-label col-form-label">
                                         Identificación
@@ -52,10 +53,11 @@ $resultado = ConsultarInfoUsuario($idUsuario);
                                     <div class="col-lg-7">
                                         <input id="txtIdentificacion" name="txtIdentificacion" type="text"
                                                class="form-control form-control-lg"
-                                               value="<?php echo $resultado['IDENTIFICACION']; ?>">
+                                               value="<?= htmlspecialchars($resultado['IDENTIFICACION']) ?>">
                                     </div>
                                 </div>
 
+                                <!-- NOMBRE -->
                                 <div class="form-group row">
                                     <label class="col-sm-3 text-right control-label col-form-label">
                                         Nombre
@@ -63,10 +65,35 @@ $resultado = ConsultarInfoUsuario($idUsuario);
                                     <div class="col-md-7">
                                         <input id="txtNombre" name="txtNombre" type="text"
                                                class="form-control form-control-lg"
-                                               value="<?php echo $resultado['NOMBRE']; ?>">
+                                               value="<?= htmlspecialchars($resultado['NOMBRE']) ?>">
                                     </div>
                                 </div>
 
+                                <!-- PRIMER APELLIDO -->
+                                <div class="form-group row">
+                                    <label class="col-sm-3 text-right control-label col-form-label">
+                                        Primer Apellido
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input id="txtApellido1" name="txtApellido1" type="text"
+                                               class="form-control form-control-lg"
+                                               value="<?= htmlspecialchars($resultado['APELLIDO1']) ?>">
+                                    </div>
+                                </div>
+
+                                <!-- SEGUNDO APELLIDO -->
+                                <div class="form-group row">
+                                    <label class="col-sm-3 text-right control-label col-form-label">
+                                        Segundo Apellido
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input id="txtApellido2" name="txtApellido2" type="text"
+                                               class="form-control form-control-lg"
+                                               value="<?= htmlspecialchars($resultado['APELLIDO2']) ?>">
+                                    </div>
+                                </div>
+
+                                <!-- CORREO -->
                                 <div class="form-group row">
                                     <label class="col-sm-3 text-right control-label col-form-label">
                                         Correo
@@ -74,10 +101,11 @@ $resultado = ConsultarInfoUsuario($idUsuario);
                                     <div class="col-md-7">
                                         <input id="txtCorreo" name="txtCorreo" type="email"
                                                class="form-control form-control-lg"
-                                               value="<?php echo $resultado['CORREO']; ?>">
+                                               value="<?= htmlspecialchars($resultado['CORREO']) ?>">
                                     </div>
                                 </div>
 
+                                <!-- BOTÓN -->
                                 <div class="row">
                                     <div class="col-md-10 text-right pb-2">
                                         <button id="btnActualizarPerfilUsuario" name="btnActualizarPerfilUsuario"

@@ -21,38 +21,54 @@ function ConsultarInfoUsuario($idUsuario)
 ============================================================ */
 if (isset($_POST["btnActualizarPerfilUsuario"])) {
 
-    $idUsuario = $_SESSION["IdUsuario"];
-    $nombre = $_POST["txtNombre"];
-    $correo = $_POST["txtCorreo"];
-    $identificacion = $_POST["txtIdentificacion"];
+    $idUsuario      = $_SESSION["IdUsuario"];
 
-    $resultado = ActualizarPerfilUsuarioModel($idUsuario, $nombre, $correo, $identificacion);
+    $nombre         = $_POST["txtNombre"] ?? '';
+    $apellido1      = $_POST["txtApellido1"] ?? '';
+    $apellido2      = $_POST["txtApellido2"] ?? '';
+    $correo         = $_POST["txtCorreo"] ?? '';
+    $identificacion = $_POST["txtIdentificacion"] ?? '';
 
-    if ($resultado) {
-        $_SESSION["Nombre"] = $nombre;
-        $_POST["txtMensaje"] = "Su información se actualizó correctamente.";
+    // Validar campos básicos
+    if ($nombre == '' || $correo == '' || $identificacion == '') {
+        $_POST["txtMensaje"] = "Todos los campos obligatorios deben completarse.";
     } else {
-        $_POST["txtMensaje"] = "Su información NO fue actualizada.";
+        $resultado = ActualizarPerfilUsuarioModel(
+            $idUsuario,
+            $nombre,
+            $apellido1,
+            $apellido2,
+            $correo,
+            $identificacion
+        );
+
+        if ($resultado) {
+            $_SESSION["Nombre"] = $nombre;
+            $_POST["txtMensaje"] = "Su información se actualizó correctamente.";
+        } else {
+            $_POST["txtMensaje"] = "Su información NO fue actualizada.";
+        }
     }
 }
+
 
 /* ============================================================
     ACTUALIZAR CONTRASEÑA
 ============================================================ */
 if (isset($_POST["btnActualizarContrasenna"])) {
 
-    $idUsuario = $_SESSION["IdUsuario"];
-    $actual = $_POST["txtContrasennaAnterior"];
-    $nueva = $_POST["txtContrasennaNueva"];
-    $confirmar = $_POST["txtConfirmar"];
-    $contrasennaSesion = $_SESSION["Contrasenna"];
+    $idUsuario         = $_SESSION["IdUsuario"];
+    $actual            = $_POST["txtContrasennaAnterior"] ?? '';
+    $nueva             = $_POST["txtContrasennaNueva"] ?? '';
+    $confirmar         = $_POST["txtConfirmar"] ?? '';
+    $contrasennaSesion = $_SESSION["Contrasenna"] ?? '';
 
     if ($contrasennaSesion != $actual) {
         $_POST["txtMensaje"] = "La contraseña anterior no coincide.";
         return;
     }
 
-    if ($nueva != $confirmar) {
+    if ($nueva !== $confirmar) {
         $_POST["txtMensaje"] = "La confirmación no coincide.";
         return;
     }

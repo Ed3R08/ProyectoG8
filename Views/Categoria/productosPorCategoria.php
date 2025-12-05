@@ -60,7 +60,7 @@ if ($idCategoria) {
 <h3>
     Productos de la categoría: <?= htmlspecialchars($categoria['descripcion']) ?>
 
-    <?php if ($esAdmin): ?>
+    <?php if ($esAdmin && isset($categoria['activo'])): ?>
         <?php if ($categoria['activo'] == 1): ?>
             <span class="badge bg-success ms-2">Activa</span>
         <?php else: ?>
@@ -69,7 +69,7 @@ if ($idCategoria) {
     <?php endif; ?>
 </h3>
 
-<?php if (!$esAdmin && $categoria['activo'] == 0): ?>
+<?php if (!$esAdmin && isset($categoria['activo']) && $categoria['activo'] == 0): ?>
 
     <div class="alert alert-warning">
         Esta categoría está desactivada y no está disponible actualmente.
@@ -98,7 +98,7 @@ if ($idCategoria) {
         <td><?= $p['existencias'] ?></td>
         <td>
             <?php if (!empty($p['ruta_imagen'])): ?>
-                <img src="<?= $p['ruta_imagen'] ?>" style="height:40px">
+                <img src="<?= htmlspecialchars($p['ruta_imagen']) ?>" style="height:40px">
             <?php endif; ?>
         </td>
     </tr>

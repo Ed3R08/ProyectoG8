@@ -6,11 +6,11 @@ function ConsultarInfoUsuarioModel($idUsuario)
     try {
         $conn = conectarOracle();
 
-        // Preparar llamada al procedimiento
-        $sql = "BEGIN ConsultarInfoUsuario(:pIdUsuario, :resultado); END;";
+        // Llamada al procedimiento
+        $sql = "BEGIN pkG_USUARIOS.consultar(:pIdUsuario, :resultado); END;";
         $stmt = oci_parse($conn, $sql);
 
-        // Bind de entrada
+        // Bind input
         oci_bind_by_name($stmt, ":pIdUsuario", $idUsuario);
 
         // Cursor de salida
@@ -21,8 +21,13 @@ function ConsultarInfoUsuarioModel($idUsuario)
         oci_execute($stmt);
         oci_execute($cursor);
 
-        // Obtener resultado
+        // Traer una fila
         $datos = oci_fetch_assoc($cursor);
+
+        // Convertir claves a mayúscula garantizada
+        if ($datos) {
+            $datos = array_change_key_case($datos, CASE_UPPER);
+        }
 
         oci_free_statement($stmt);
         oci_free_statement($cursor);
@@ -31,20 +36,22 @@ function ConsultarInfoUsuarioModel($idUsuario)
         return $datos;
 
     } catch (Exception $e) {
-        return null;
+        return [];
     }
 }
 
-function ActualizarPerfilUsuarioModel($idUsuario, $nombre, $correo, $identificacion)
+function ActualizarPerfilUsuarioModel($idUsuario, $nombre, $ap1, $ap2, $correo, $identificacion)
 {
     try {
         $conn = conectarOracle();
 
-        $sql = "BEGIN ActualizarPerfilUsuario(:idUser, :nom, :cor, :ident); END;";
+        $sql = "BEGIN PKG_USUARIOS.actualizar(:idUser, :nom, :ap1, :ap2, :cor, :ident); END;";
         $stmt = oci_parse($conn, $sql);
 
         oci_bind_by_name($stmt, ":idUser", $idUsuario);
         oci_bind_by_name($stmt, ":nom", $nombre);
+        oci_bind_by_name($stmt, ":ap1", $ap1);
+        oci_bind_by_name($stmt, ":ap2", $ap2);
         oci_bind_by_name($stmt, ":cor", $correo);
         oci_bind_by_name($stmt, ":ident", $identificacion);
 
