@@ -33,6 +33,7 @@ function ListarCategoriasModel()
     }
 }
 
+
 /* ============================================================
    LISTAR TODAS LAS CATEGORÍAS (ADMIN)
 ============================================================ */
@@ -164,37 +165,4 @@ function ActivarCategoriaModel($id)
     }
 }
 
-
-/* ============================================================
-   LISTAR PRODUCTOS POR CATEGORÍA
-============================================================ */
-function ListarProductosPorCategoriaModel($idCategoria)
-{
-    try {
-        $conn = conectarOracle();
-        $sql = "BEGIN sp_consulta_productos(:cat, :res); END;";
-        $stmt = oci_parse($conn, $sql);
-
-        oci_bind_by_name($stmt, ":cat", $idCategoria);
-
-        $cursor = oci_new_cursor($conn);
-        oci_bind_by_name($stmt, ":res", $cursor, -1, OCI_B_CURSOR);
-
-        oci_execute($stmt);
-        oci_execute($cursor);
-
-        $lista = [];
-        while ($fila = oci_fetch_assoc($cursor)) {
-            $lista[] = array_change_key_case($fila, CASE_LOWER);
-        }
-
-        oci_free_statement($stmt);
-        oci_free_statement($cursor);
-        oci_close($conn);
-
-        return $lista;
-
-    } catch (Exception $e) {
-        return [];
-    }
-}
+?>
