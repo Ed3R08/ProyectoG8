@@ -1,26 +1,23 @@
 <?php
-
-
+// /ProyectoG8/Models/connect.php
+ 
+require_once __DIR__ . '/conexionOracle.php';
+ 
+/**
+ * Devuelve una conexión OCI a Oracle.
+ */
 function OpenDB()
 {
-    return mysqli_connect("127.0.0.1:3307", "root", "", "octaviusdb");
+    return conectarOracle(); // usa tu función que ya probaste
 }
-
-function CloseDB($context)
+ 
+/**
+ * Cierra la conexión OCI.
+ */
+function CloseDB($cn)
 {
-    mysqli_close($context);
+    if ($cn) {
+        oci_close($cn);
+    }
 }
-
-function RegistrarError($error)
-{
-    $context = OpenDB();
-
-    $message = mysqli_real_escape_string($context, $error->getMessage());
-
-    $sp = "CALL RegistrarError('$message')";
-    $context->query($sp);
-
-    CloseDB($context);
-}
-
-?>
+ 
