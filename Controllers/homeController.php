@@ -31,7 +31,7 @@ if (isset($_POST["btnIniciarSesion"])) {
 }
 
 /* ============================================================
-    REGISTRAR NUEVO USUARIO  (SIN API, MANUAL)
+    REGISTRAR NUEVO USUARIO
 ============================================================ */
 if (isset($_POST["btnRegistrarUsuario"])) {
 
@@ -42,24 +42,34 @@ if (isset($_POST["btnRegistrarUsuario"])) {
     $correo         = trim($_POST["txtCorreo"]);
     $contrasenna    = $_POST["txtContrasenna"];
 
-    // Validar campos obligatorios
-    if ($identificacion === "" || $nombre === "" || $apellido1 === "" || $apellido2 === "" || $correo === "" || $contrasenna === "") {
+    if ($identificacion === "" || $nombre === "" || $apellido1 === "" ||
+        $apellido2 === "" || $correo === "" || $contrasenna === "") {
+
         $_POST["txtMensaje"] = "Todos los campos son obligatorios.";
+
     } else {
 
-        $resultado = RegistrarUsuarioModel($nombre, $apellido1, $apellido2, $correo, $identificacion, $contrasenna);
+        $resultado = RegistrarUsuarioModel(
+            $nombre,
+            $apellido1,
+            $apellido2,
+            $correo,
+            $identificacion,
+            $contrasenna
+        );
 
-        if ($resultado) {
+        if ($resultado === true) {
             header("location: ../../Views/Home/login.php");
             exit();
         } else {
-            $_POST["txtMensaje"] = "El usuario no pudo ser registrado.";
+            // 👇 MENSAJE REAL DE ORACLE (correo duplicado, id duplicada, regex, etc.)
+            $_POST["txtMensaje"] = $resultado;
         }
     }
 }
 
 /* ============================================================
-    RECUPERAR ACCESO (ENVIAR CONTRASEÑA TEMPORAL)
+    RECUPERAR ACCESO
 ============================================================ */
 if (isset($_POST["btnRecuperarAcceso"])) {
 
@@ -73,7 +83,7 @@ if (isset($_POST["btnRecuperarAcceso"])) {
 
         if ($ok) {
             $mensaje = "<html><body>
-                        Estimado(a) " . $fila["NOMBRE"] . "<br><br>
+                        Estimado(a) {$fila["NOMBRE"]}<br><br>
                         Nuevo código de acceso: <b>$contrasennaTemporal</b><br>
                         Cámbielo después de ingresar al sistema.
                         </body></html>";

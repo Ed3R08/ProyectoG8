@@ -6,7 +6,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-
 /* ============================================================
     CONSULTAR INFORMACIÓN DEL USUARIO (ORACLE)
 ============================================================ */
@@ -14,7 +13,6 @@ function ConsultarInfoUsuario($idUsuario)
 {
     return ConsultarInfoUsuarioModel($idUsuario);
 }
-
 
 /* ============================================================
     ACTUALIZAR PERFIL DE USUARIO
@@ -29,10 +27,13 @@ if (isset($_POST["btnActualizarPerfilUsuario"])) {
     $correo         = $_POST["txtCorreo"] ?? '';
     $identificacion = $_POST["txtIdentificacion"] ?? '';
 
-    // Validar campos básicos
-    if ($nombre == '' || $correo == '' || $identificacion == '') {
+    // Validar campos obligatorios básicos
+    if ($nombre === '' || $correo === '' || $identificacion === '') {
+
         $_POST["txtMensaje"] = "Todos los campos obligatorios deben completarse.";
+
     } else {
+
         $resultado = ActualizarPerfilUsuarioModel(
             $idUsuario,
             $nombre,
@@ -42,15 +43,19 @@ if (isset($_POST["btnActualizarPerfilUsuario"])) {
             $identificacion
         );
 
-        if ($resultado) {
+        // ✅ ESTE ES EL CAMBIO CLAVE
+        if ($resultado === true) {
+
             $_SESSION["Nombre"] = $nombre;
             $_POST["txtMensaje"] = "Su información se actualizó correctamente.";
+
         } else {
-            $_POST["txtMensaje"] = "Su información NO fue actualizada.";
+
+            // Aquí llega el mensaje exacto del PACKAGE
+            $_POST["txtMensaje"] = $resultado;
         }
     }
 }
-
 
 /* ============================================================
     ACTUALIZAR CONTRASEÑA
