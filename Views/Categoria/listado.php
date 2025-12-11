@@ -43,10 +43,27 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
 
 <?php if (!empty($categorias)): ?>
     <?php foreach ($categorias as $c): ?>
+
+        <?php
+        // 🔥 REDIRECCIÓN ESPECIAL PARA SERVICIOS (ID = 8)
+        if ($c['id_categoria'] == 8) {
+
+            if ($esAdmin) {
+                $link = "/ProyectoG8/Views/Visitas/panelAdmin.php"; // Admin a panel
+            } else {
+                $link = "/ProyectoG8/Views/Visitas/misVisitas.php"; // Cliente a agendar
+            }
+
+        } else {
+            // Comportamiento normal
+            $link = "/ProyectoG8/Views/Categoria/productosPorCategoria.php?id=" . $c['id_categoria'];
+        }
+        ?>
+
         <tr>
 
             <td>
-                <a href="/ProyectoG8/Views/Categoria/productosPorCategoria.php?id=<?= $c['id_categoria'] ?>">
+                <a href="<?= $link ?>">
                     <?= htmlspecialchars($c['descripcion']) ?>
                 </a>
             </td>

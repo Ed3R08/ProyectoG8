@@ -6,11 +6,11 @@ if (isset($_POST['btnGuardar'])) {
   exit;
 }
 
-// 1) Cargar el modelo de categorías para el dropdown
+// 1) Cargar categorías (solo activas)
 include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/CategoriaModel.php';
 $categorias = ListarCategoriasModel();
 
-// 2) Incluir el layout
+// 2) Incluir layout
 include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
 ?>
 <!DOCTYPE html>
@@ -19,10 +19,11 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
 
 <body>
   <div id="main-wrapper">
-    <?php ShowHeader();
-    ShowMenu(); ?>
+    <?php ShowHeader(); ShowMenu(); ?>
+
     <div class="page-wrapper">
       <div class="container-fluid">
+
         <h3>Registrar Producto</h3>
 
         <!-- Mensajes -->
@@ -35,41 +36,59 @@ include_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
         <?php endif; ?>
 
         <form action="" method="post" class="mt-4" enctype="multipart/form-data">
+
+          <!-- ========================= -->
+          <!--      CATEGORÍA           -->
+          <!-- ========================= -->
           <div class="form-group">
             <label>Categoría</label>
             <select name="categoria" class="form-control" required>
               <option value="">Seleccione…</option>
+
               <?php foreach ($categorias as $c): ?>
+
+                <?php if ($c['id_categoria'] == 8) continue; ?> <!-- ⛔ Ocultar Servicios -->
+
                 <option value="<?= $c['id_categoria'] ?>">
                   <?= htmlspecialchars($c['descripcion']) ?>
                 </option>
+
               <?php endforeach; ?>
             </select>
           </div>
+
           <div class="form-group">
             <label>Nombre</label>
             <input type="text" name="nombre" class="form-control" required>
           </div>
+
           <div class="form-group">
             <label>Detalle</label>
             <textarea name="detalle" class="form-control" rows="3"></textarea>
           </div>
+
           <div class="form-group">
             <label>Precio</label>
             <input type="number" step="0.01" name="precio" class="form-control" required>
           </div>
+
           <div class="form-group">
             <label>Existencias</label>
             <input type="number" name="existencias" class="form-control" required>
           </div>
+
           <div class="form-group">
             <label>Imagen</label>
             <input type="file" name="imagen" class="form-control" accept="image/*">
           </div>
+
           <button name="btnGuardar" type="submit" class="btn btn-success">Guardar</button>
+
         </form>
+
       </div>
     </div>
+
   </div>
   <?php AddJs(); ?>
 </body>
