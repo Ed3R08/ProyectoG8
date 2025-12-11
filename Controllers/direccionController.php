@@ -29,7 +29,7 @@ switch ($accion) {
         exit;
 
     case 'actualizar':
-        if ($_SERVER['REQUEST_METHOD'] === 'POST']) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $idDir     = intval($_POST['id_direccion'] ?? 0);
             $provincia = trim($_POST['provincia'] ?? '');
             $canton    = trim($_POST['canton'] ?? '');
@@ -45,7 +45,7 @@ switch ($accion) {
         exit;
 
     case 'eliminar':
-        if ($_SERVER['REQUEST_METHOD'] === 'POST']) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $idDir = intval($_POST['id_direccion'] ?? 0);
 
             if ($idDir > 0) {
@@ -59,4 +59,3 @@ switch ($accion) {
         header("Location: ../Views/Direccion/listado.php");
         exit;
 }
-?>

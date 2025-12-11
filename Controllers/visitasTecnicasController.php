@@ -16,6 +16,9 @@ $accion    = $_GET['accion'] ?? '';
 
 switch ($accion) {
 
+    /* ===================================
+       PROGRAMAR VISITA (CLIENTE)
+    =================================== */
     case 'programar':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $idTipo   = intval($_POST['id_tipo'] ?? 1);
@@ -29,8 +32,11 @@ switch ($accion) {
         header("Location: ../Views/Visitas/misVisitas.php?msg=Visita_programada");
         exit;
 
+    /* ===================================
+       GUARDAR INFORME (SOLO ADMIN)
+    =================================== */
     case 'guardarInforme':
-        if ($idRol != 2) {
+        if ($idRol != 2) { // 2 = admin en tu proyecto
             header("Location: ../Views/Home/principal.php");
             exit();
         }
@@ -51,4 +57,3 @@ switch ($accion) {
         header("Location: ../Views/Home/principal.php");
         exit;
 }
-?>

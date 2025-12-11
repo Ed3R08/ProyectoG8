@@ -3,6 +3,9 @@ require_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/conexionOracle.php'
 
 class DireccionModel
 {
+    /* ===============================
+       LISTAR DIRECCIONES DE USUARIO
+    ================================= */
     public static function listarPorUsuario($idUsuario)
     {
         try {
@@ -34,12 +37,17 @@ class DireccionModel
         }
     }
 
+    /* ===============================
+       INSERTAR DIRECCIÓN
+    ================================= */
     public static function insertar($idUsuario, $provincia, $canton, $distrito, $detalle, $codigoPostal)
     {
         try {
             $conn = conectarOracle();
 
-            $sql = "BEGIN PKG_DIRECCION.SP_INSERT_DIRECCION(:u, :prov, :cant, :dist, :det, :cp); END;";
+            $sql = "BEGIN PKG_DIRECCION.SP_INSERT_DIRECCION(
+                        :u, :prov, :cant, :dist, :det, :cp
+                    ); END;";
             $stmt = oci_parse($conn, $sql);
 
             oci_bind_by_name($stmt, ":u",    $idUsuario);
@@ -50,7 +58,6 @@ class DireccionModel
             oci_bind_by_name($stmt, ":cp",   $codigoPostal);
 
             $ok = oci_execute($stmt);
-
             oci_free_statement($stmt);
             oci_close($conn);
 
@@ -60,12 +67,17 @@ class DireccionModel
         }
     }
 
+    /* ===============================
+       ACTUALIZAR DIRECCIÓN
+    ================================= */
     public static function actualizar($idUsuario, $idDireccion, $provincia, $canton, $distrito, $detalle, $codigoPostal)
     {
         try {
             $conn = conectarOracle();
 
-            $sql = "BEGIN PKG_DIRECCION.SP_ACTUALIZAR_DIRECCION(:u, :id, :prov, :cant, :dist, :det, :cp); END;";
+            $sql = "BEGIN PKG_DIRECCION.SP_ACTUALIZAR_DIRECCION(
+                        :u, :id, :prov, :cant, :dist, :det, :cp
+                    ); END;";
             $stmt = oci_parse($conn, $sql);
 
             oci_bind_by_name($stmt, ":u",   $idUsuario);
@@ -77,7 +89,6 @@ class DireccionModel
             oci_bind_by_name($stmt, ":cp",  $codigoPostal);
 
             $ok = oci_execute($stmt);
-
             oci_free_statement($stmt);
             oci_close($conn);
 
@@ -87,6 +98,9 @@ class DireccionModel
         }
     }
 
+    /* ===============================
+       ELIMINAR DIRECCIÓN
+    ================================= */
     public static function eliminar($idUsuario, $idDireccion)
     {
         try {
@@ -99,7 +113,6 @@ class DireccionModel
             oci_bind_by_name($stmt, ":id", $idDireccion);
 
             $ok = oci_execute($stmt);
-
             oci_free_statement($stmt);
             oci_close($conn);
 
@@ -109,4 +122,3 @@ class DireccionModel
         }
     }
 }
-?>
