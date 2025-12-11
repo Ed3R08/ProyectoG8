@@ -12,6 +12,20 @@ require_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/VisitasTecnicasMode
 require_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Views/layoutInterno.php';
 
 $visitas = VisitasTecnicasModel::listarVisitasAdmin();
+
+/* ============================
+   SEPARAMOS PENDIENTES Y REALIZADAS
+============================ */
+$pendientes = [];
+$realizadas = [];
+
+foreach ($visitas as $v) {
+    if (!empty($v['descripcion'])) {
+        $realizadas[] = $v;
+    } else {
+        $pendientes[] = $v;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -28,37 +42,44 @@ $visitas = VisitasTecnicasModel::listarVisitasAdmin();
 
 <?php if (!empty($_GET['msg'])): ?>
   <div class="alert alert-success">
-    <?php echo htmlspecialchars($_GET['msg']); ?>
+    <?= htmlspecialchars($_GET['msg']); ?>
   </div>
 <?php endif; ?>
 
-<div class="card">
+
+<!-- ===================================================== -->
+<!-- ===============   VISITAS PENDIENTES  ================= -->
+<!-- ===================================================== -->
+
+<h4 class="mt-4 mb-2">Visitas pendientes</h4>
+
+<div class="card mb-4">
   <div class="card-body">
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>ID Visita</th>
-          <th>ID Usuario</th>
-          <th>ID Tipo</th>
           <th>Fecha</th>
+          <th>Cliente</th>
+          <th>Servicio</th>
           <th>Dirección</th>
           <th>Motivo</th>
           <th>Informe técnico</th>
         </tr>
       </thead>
       <tbody>
-      <?php if ($visitas): ?>
-        <?php foreach ($visitas as $v): ?>
+
+      <?php if ($pendientes): ?>
+        <?php foreach ($pendientes as $v): ?>
           <tr>
-            <td><?php echo htmlspecialchars($v['id_visita']); ?></td>
-            <td><?php echo htmlspecialchars($v['id_usuario']); ?></td>
-            <td><?php echo htmlspecialchars($v['id_tipo']); ?></td>
-            <td><?php echo htmlspecialchars($v['fecha_hora']); ?></td>
-            <td><?php echo htmlspecialchars($v['direccion']); ?></td>
-            <td><?php echo htmlspecialchars($v['motivo']); ?></td>
+            <td><?= htmlspecialchars($v['fecha_hora']); ?></td>
+            <td><?= htmlspecialchars($v['nombre_usuario']); ?></td>
+            <td><?= htmlspecialchars($v['tipo_servicio']); ?></td>
+            <td><?= htmlspecialchars($v['direccion']); ?></td>
+            <td><?= htmlspecialchars($v['motivo']); ?></td>
+
             <td>
               <form method="post" action="../../Controllers/visitasTecnicasController.php?accion=guardarInforme">
-                <input type="hidden" name="id_visita" value="<?php echo $v['id_visita']; ?>">
+                <input type="hidden" name="id_visita" value="<?= $v['id_visita']; ?>">
                 <textarea name="descripcion" class="form-control mb-1" rows="2" placeholder="Escriba el informe..." required></textarea>
                 <button class="btn btn-sm btn-primary">Guardar informe</button>
               </form>
@@ -66,8 +87,51 @@ $visitas = VisitasTecnicasModel::listarVisitasAdmin();
           </tr>
         <?php endforeach; ?>
       <?php else: ?>
-        <tr><td colspan="7">No hay visitas registradas.</td></tr>
+        <tr><td colspan="6">No hay visitas pendientes.</td></tr>
       <?php endif; ?>
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- ===================================================== -->
+<!-- ===============   VISITAS REALIZADAS  ================= -->
+<!-- ===================================================== -->
+
+<h4 class="mt-4 mb-2">Visitas realizadas</h4>
+
+<div class="card">
+  <div class="card-body">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Cliente</th>
+          <th>Servicio</th>
+          <th>Dirección</th>
+          <th>Motivo</th>
+          <th>Informe técnico</th>
+        </tr>
+      </thead>
+      <tbody>
+
+      <?php if ($realizadas): ?>
+        <?php foreach ($realizadas as $v): ?>
+          <tr>
+            <td><?= htmlspecialchars($v['fecha_hora']); ?></td>
+            <td><?= htmlspecialchars($v['nombre_usuario']); ?></td>
+            <td><?= htmlspecialchars($v['tipo_servicio']); ?></td>
+            <td><?= htmlspecialchars($v['direccion']); ?></td>
+            <td><?= htmlspecialchars($v['motivo']); ?></td>
+            <td><?= htmlspecialchars($v['descripcion']); ?></td>
+          </tr>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <tr><td colspan="6">No hay visitas realizadas.</td></tr>
+      <?php endif; ?>
+
       </tbody>
     </table>
   </div>

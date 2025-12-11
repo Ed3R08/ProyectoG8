@@ -158,6 +158,13 @@ function ShowMenu()
                   <i class="fa fa-file-text-o" aria-hidden="true"></i></i><span class="hide-menu">Historial de compras</span>
                 </a>
               </li>';
+        echo '<li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                   href="../Visitas/panelAdmin.php" aria-expanded="false">
+                  <i class="fa fa-wrench"></i><span class="hide-menu">Visitas técnicas (Admin)</span>
+                </a>
+              </li>';
+
     } else {
         // *** USUARIO REGULAR (cualquier otro IdRol) ***
         echo '<li class="sidebar-item">
@@ -184,6 +191,20 @@ function ShowMenu()
                   <i class="fa fa-file-text-o" aria-hidden="true"></i></i><span class="hide-menu">Historial de compras</span>
                 </a>
               </li>';
+        echo '<li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                   href="../Direccion/listado.php" aria-expanded="false">
+                  <i class="fa fa-map-marker"></i><span class="hide-menu">Mis direcciones</span>
+                </a>
+              </li>';
+
+        echo '<li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                   href="../Visitas/misVisitas.php" aria-expanded="false">
+                  <i class="fa fa-wrench"></i><span class="hide-menu">Visitas técnicas</span>
+                </a>
+              </li>';
+
     }
 
     echo '    </ul>

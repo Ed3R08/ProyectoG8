@@ -8,9 +8,9 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 $idUsuario = $_SESSION["IdUsuario"];
-$resultado = ConsultarInfoUsuario($idUsuario);
+$idRol     = $_SESSION["IdRol"];   // ← NECESARIO PARA OCULTAR COSAS AL ADMIN
 
-// Obtener favoritos
+$resultado = ConsultarInfoUsuario($idUsuario);
 $favoritos = ListarFavoritosUsuarioModel($idUsuario);
 ?>
 
@@ -25,7 +25,6 @@ $favoritos = ListarFavoritosUsuarioModel($idUsuario);
 
     <div class="page-wrapper">
     <div class="container-fluid">
-
 
         <!-- ====================================================== -->
         <!-- DATOS DEL PERFIL -->
@@ -43,7 +42,6 @@ $favoritos = ListarFavoritosUsuarioModel($idUsuario);
                     <?php if (isset($_POST["txtMensaje"])): ?>
                         <div class="alert alert-warning text-center"><?= $_POST["txtMensaje"] ?></div>
                     <?php endif; ?>
-
 
                     <!-- IDENTIFICACIÓN -->
                     <div class="form-group row">
@@ -129,13 +127,20 @@ $favoritos = ListarFavoritosUsuarioModel($idUsuario);
                             <th>Producto</th>
                             <th>Precio</th>
                             <th>Imagen</th>
-                            <th>Cantidad</th>
-                            <th>Comprar</th>
+
+                            <?php if ($idRol != 2): ?>  
+                                <th>Cantidad</th>
+                            <?php endif; ?>
+
+                            <?php if ($idRol != 2): ?>
+                                <th>Comprar</th>
+                            <?php endif; ?>
+
                             <th>Quitar</th>
                         </tr>
                     </thead>
-                    <tbody>
 
+                    <tbody>
                     <?php foreach ($favoritos as $f): ?>
                         <tr>
                             <td><?= htmlspecialchars($f['nombre']) ?></td>
@@ -147,38 +152,42 @@ $favoritos = ListarFavoritosUsuarioModel($idUsuario);
                                 <?php endif; ?>
                             </td>
 
-                            <!-- CANTIDAD -->
+                            <!-- SOLO USUARIO NORMAL VE CANTIDAD -->
+                            <?php if ($idRol != 2): ?>
                             <td>
                                 <input type="number" class="form-control cant-input"
                                        data-id="<?= $f['id_producto'] ?>"
                                        value="1" min="1" style="width:70px;">
                             </td>
+                            <?php endif; ?>
 
-                            <!-- AGREGAR AL CARRITO -->
+                            <!-- SOLO USUARIO NORMAL VE BOTÓN COMPRAR -->
+                            <?php if ($idRol != 2): ?>
                             <td>
                                 <button class="btn btn-sm btn-primary btn-agregar"
                                         data-id="<?= $f['id_producto'] ?>">
                                     Agregar
                                 </button>
                             </td>
+                            <?php endif; ?>
 
-                            <!-- QUITAR FAVORITO -->
+                            <!-- QUITAR FAVORITO (ADMIN Y REGULAR) -->
                             <td>
                                 <button class="btn btn-sm btn-danger btn-quitar"
                                         data-id="<?= $f['id_producto'] ?>">
                                     Quitar
                                 </button>
                             </td>
+
                         </tr>
                     <?php endforeach; ?>
-
                     </tbody>
+
                 </table>
                 <?php endif; ?>
 
             </div>
         </div>
-
 
     </div>
     </div>
@@ -187,65 +196,6 @@ $favoritos = ListarFavoritosUsuarioModel($idUsuario);
 </div>
 
 <?php AddJs(); ?>
-
-<!-- ====================================================== -->
-<!-- JS PARA FAVORITOS Y CARRITO DESDE PERFIL -->
-<!-- ====================================================== -->
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-    // QUITAR FAVORITO
-    document.querySelectorAll(".btn-quitar").forEach(btn => {
-        btn.addEventListener("click", function () {
-            let id = this.dataset.id;
-
-            let fd = new FormData();
-            fd.append("producto_id", id);
-
-            fetch("/ProyectoG8/Controllers/favoritosController.php?accion=eliminar", {
-                method: "POST",
-                body: fd
-            })
-            .then(r => r.json())
-            .then(d => {
-                document.getElementById("mensaje-favoritos").innerHTML =
-                    `<div class='alert alert-${d.success ? "success" : "danger"}'>
-                        ${d.success ? "Producto eliminado de favoritos" : "Error"}
-                    </div>`;
-                setTimeout(() => location.reload(), 900);
-            });
-        });
-    });
-
-
-    // AGREGAR AL CARRITO
-    document.querySelectorAll(".btn-agregar").forEach(btn => {
-        btn.addEventListener("click", function () {
-
-            let prod = this.dataset.id;
-            let cant = document.querySelector(`.cant-input[data-id='${prod}']`).value;
-
-            let fd = new FormData();
-            fd.append("producto_id", prod);
-            fd.append("cantidad", cant);
-
-            fetch("/ProyectoG8/Controllers/carritoController.php?accion=agregar", {
-                method: "POST",
-                body: fd
-            })
-            .then(r => r.json())
-            .then(d => {
-                document.getElementById("mensaje-favoritos").innerHTML =
-                    `<div class='alert alert-${d.success ? "success" : "danger"}'>
-                        ${d.message}
-                    </div>`;
-            });
-
-        });
-    });
-
-});
-</script>
 
 </body>
 </html>
