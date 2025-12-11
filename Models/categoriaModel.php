@@ -2,14 +2,14 @@
 require_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/conexionOracle.php';
 
 
-/* ============================================================
-   LISTAR SOLO CATEGORÍAS ACTIVAS
-============================================================ */
+// ============================================================
+// LISTAR SOLO CATEGORÍAS ACTIVAS (PACKAGE)
+// ============================================================
 function ListarCategoriasModel()
 {
     try {
         $conn = conectarOracle();
-        $sql = "BEGIN sp_consulta_categorias(:res); END;";
+        $sql = "BEGIN PKG_CATEGORIA.listar(:res); END;";
         $stmt = oci_parse($conn, $sql);
 
         $cursor = oci_new_cursor($conn);
@@ -26,6 +26,7 @@ function ListarCategoriasModel()
         oci_free_statement($stmt);
         oci_free_statement($cursor);
         oci_close($conn);
+
         return $lista;
 
     } catch (Exception $e) {
@@ -34,14 +35,14 @@ function ListarCategoriasModel()
 }
 
 
-/* ============================================================
-   LISTAR TODAS LAS CATEGORÍAS (ADMIN)
-============================================================ */
+// ============================================================
+// LISTAR TODAS LAS CATEGORÍAS (ADMIN) – PACKAGE
+// ============================================================
 function ListarCategoriasAdminModel()
 {
     try {
         $conn = conectarOracle();
-        $sql = "BEGIN sp_consulta_categorias_admin(:res); END;";
+        $sql = "BEGIN PKG_CATEGORIA.listar_admin(:res); END;";
         $stmt = oci_parse($conn, $sql);
 
         $cursor = oci_new_cursor($conn);
@@ -58,6 +59,7 @@ function ListarCategoriasAdminModel()
         oci_free_statement($stmt);
         oci_free_statement($cursor);
         oci_close($conn);
+
         return $lista;
 
     } catch (Exception $e) {
@@ -66,14 +68,14 @@ function ListarCategoriasAdminModel()
 }
 
 
-/* ============================================================
-   REGISTRAR CATEGORÍA
-============================================================ */
+// ============================================================
+// REGISTRAR CATEGORÍA – PACKAGE
+// ============================================================
 function RegistrarCategoriaModel($descripcion, $ruta_imagen)
 {
     try {
         $conn = conectarOracle();
-        $sql = "BEGIN sp_insert_categoria(:d, :img); END;";
+        $sql = "BEGIN PKG_CATEGORIA.insertar(:d, :img); END;";
         $stmt = oci_parse($conn, $sql);
 
         oci_bind_by_name($stmt, ":d",   $descripcion);
@@ -83,6 +85,7 @@ function RegistrarCategoriaModel($descripcion, $ruta_imagen)
 
         oci_free_statement($stmt);
         oci_close($conn);
+
         return $ok;
 
     } catch (Exception $e) {
@@ -91,14 +94,14 @@ function RegistrarCategoriaModel($descripcion, $ruta_imagen)
 }
 
 
-/* ============================================================
-   EDITAR CATEGORÍA
-============================================================ */
+// ============================================================
+// EDITAR CATEGORÍA – PACKAGE
+// ============================================================
 function EditarCategoriaModel($id, $descripcion, $ruta_imagen, $activo)
 {
     try {
         $conn = conectarOracle();
-        $sql = "BEGIN EditarCategoria(:id, :d, :img, :act); END;";
+        $sql = "BEGIN PKG_CATEGORIA.editar(:id, :d, :img, :act); END;";
         $stmt = oci_parse($conn, $sql);
 
         oci_bind_by_name($stmt, ":id",  $id);
@@ -110,6 +113,7 @@ function EditarCategoriaModel($id, $descripcion, $ruta_imagen, $activo)
 
         oci_free_statement($stmt);
         oci_close($conn);
+
         return $ok;
 
     } catch (Exception $e) {
@@ -118,14 +122,14 @@ function EditarCategoriaModel($id, $descripcion, $ruta_imagen, $activo)
 }
 
 
-/* ============================================================
-   DESACTIVAR CATEGORÍA
-============================================================ */
+// ============================================================
+// DESACTIVAR CATEGORÍA – PACKAGE
+// ============================================================
 function EliminarCategoriaModel($id)
 {
     try {
         $conn = conectarOracle();
-        $sql = "BEGIN EliminarCategoria(:id); END;";
+        $sql = "BEGIN PKG_CATEGORIA.desactivar(:id); END;";
         $stmt = oci_parse($conn, $sql);
 
         oci_bind_by_name($stmt, ":id", $id);
@@ -134,6 +138,7 @@ function EliminarCategoriaModel($id)
 
         oci_free_statement($stmt);
         oci_close($conn);
+
         return $ok;
 
     } catch (Exception $e) {
@@ -142,14 +147,14 @@ function EliminarCategoriaModel($id)
 }
 
 
-/* ============================================================
-   ACTIVAR CATEGORÍA
-============================================================ */
+// ============================================================
+// ACTIVAR CATEGORÍA – PACKAGE
+// ============================================================
 function ActivarCategoriaModel($id)
 {
     try {
         $conn = conectarOracle();
-        $sql = "BEGIN ActivarCategoria(:id); END;";
+        $sql = "BEGIN PKG_CATEGORIA.activar(:id); END;";
         $stmt = oci_parse($conn, $sql);
 
         oci_bind_by_name($stmt, ":id", $id);
@@ -158,6 +163,7 @@ function ActivarCategoriaModel($id)
 
         oci_free_statement($stmt);
         oci_close($conn);
+
         return $ok;
 
     } catch (Exception $e) {
