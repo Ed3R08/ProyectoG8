@@ -53,7 +53,7 @@ function ActualizarPerfilUsuarioModel($idUsuario, $nombre, $ap1, $ap2, $correo, 
             return 'Error al actualizar perfil';
         }
 
-        // ✅ LIMPIAR MENSAJE ORACLE
+        // LIMPIAR MENSAJE ORACLE
         // Tomar solo lo que viene después de "ORA-xxxxx:"
         if (preg_match('/ORA-\d+:\s*(.*)/', $error['message'], $matches)) {
             return trim($matches[1]);
