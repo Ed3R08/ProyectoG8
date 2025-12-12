@@ -1,24 +1,20 @@
 <?php
-// Models/productoModel.php
 require_once $_SERVER["DOCUMENT_ROOT"] . '/ProyectoG8/Models/conexionOracle.php';
 
-/**
- * Normaliza las claves del array a minúsculas
- */
 function normalizarFilaOracle($fila)
 {
     return array_change_key_case($fila, CASE_LOWER);
 }
 
 /* ============================================================
-   LISTAR TODOS LOS PRODUCTOS (usa sp_consulta_productos_all)
+   LISTAR TODOS LOS PRODUCTOS (PACKAGE)
 ============================================================ */
 function ListarProductosModel()
 {
     try {
         $conn = conectarOracle();
 
-        $sql = "BEGIN sp_consulta_productos_all(:cur); END;";
+        $sql = "BEGIN PKG_PRODUCTOS.listar_all(:cur); END;";
         $stmt = oci_parse($conn, $sql);
 
         $cursor = oci_new_cursor($conn);
@@ -29,9 +25,8 @@ function ListarProductosModel()
 
         $lista = [];
         while ($fila = oci_fetch_assoc($cursor)) {
-            $fila = normalizarFilaOracle($fila);
 
-            // Asegurar claves consistentes para la vista
+            $fila = normalizarFilaOracle($fila);
             $fila["existencias"] = $fila["existencias"] ?? $fila["cantidad"] ?? 0;
             $fila["estado"]      = $fila["estado"] ?? 1;
 
@@ -49,33 +44,30 @@ function ListarProductosModel()
     }
 }
 
-
 /* ============================================================
-   LISTAR PRODUCTOS POR CATEGORÍA (usa sp_consulta_productos)
+   LISTAR POR CATEGORÍA (PACKAGE)
 ============================================================ */
 function ListarProductosPorCategoriaModel($idCategoria)
 {
     try {
         $conn = conectarOracle();
 
-        $sql = "BEGIN sp_consulta_productos(:pCat, :pCursor); END;";
+        $sql = "BEGIN PKG_PRODUCTOS.listar_categoria(:cat, :cur); END;";
         $stmt = oci_parse($conn, $sql);
 
-        oci_bind_by_name($stmt, ":pCat", $idCategoria);
+        oci_bind_by_name($stmt, ":cat", $idCategoria);
 
         $cursor = oci_new_cursor($conn);
-        oci_bind_by_name($stmt, ":pCursor", $cursor, -1, OCI_B_CURSOR);
+        oci_bind_by_name($stmt, ":cur", $cursor, -1, OCI_B_CURSOR);
 
         oci_execute($stmt);
         oci_execute($cursor);
 
         $productos = [];
         while ($fila = oci_fetch_assoc($cursor)) {
-            $fila = normalizarFilaOracle($fila);
 
-            // Normalizar claves requeridas por la vista
-            $fila["existencias"] = $fila["existencias"] ?? $fila["cantidad"] ?? 0;
-            $fila["estado"]      = $fila["estado"] ?? 1;
+            $fila = normalizarFilaOracle($fila);
+            $fila["existencias"] = $fila["existencias"] ?? 0;
 
             $productos[] = $fila;
         }
@@ -91,115 +83,91 @@ function ListarProductosPorCategoriaModel($idCategoria)
     }
 }
 
-
 /* ============================================================
-   REGISTRAR PRODUCTO (sp_insert_producto)
+   INSERTAR PRODUCTO
 ============================================================ */
-function RegistrarProductoModel($idCategoria, $nombre, $detalle, $precio, $existencias, $ruta_imagen)
+function RegistrarProductoModel($cat, $nom, $det, $precio, $exist, $img)
 {
     try {
         $conn = conectarOracle();
 
-        $sql = "BEGIN sp_insert_producto(:cat, :nom, :det, :pre, :cant, :img); END;";
+        $sql = "BEGIN PKG_PRODUCTOS.insertar(:c, :n, :d, :p, :e, :i); END;";
         $stmt = oci_parse($conn, $sql);
 
-        oci_bind_by_name($stmt, ":cat",  $idCategoria);
-        oci_bind_by_name($stmt, ":nom",  $nombre);
-        oci_bind_by_name($stmt, ":det",  $detalle);
-        oci_bind_by_name($stmt, ":pre",  $precio);
-        oci_bind_by_name($stmt, ":cant", $existencias);
-        oci_bind_by_name($stmt, ":img",  $ruta_imagen);
+        oci_bind_by_name($stmt, ":c", $cat);
+        oci_bind_by_name($stmt, ":n", $nom);
+        oci_bind_by_name($stmt, ":d", $det);
+        oci_bind_by_name($stmt, ":p", $precio);
+        oci_bind_by_name($stmt, ":e", $exist);
+        oci_bind_by_name($stmt, ":i", $img);
 
-        $ok = oci_execute($stmt);
-
-        oci_free_statement($stmt);
-        oci_close($conn);
-
-        return $ok;
+        return oci_execute($stmt);
 
     } catch (Exception $e) {
         return false;
     }
 }
 
-
 /* ============================================================
-   ACTUALIZAR PRODUCTO (EditarProducto)
+   EDITAR PRODUCTO
 ============================================================ */
-function ActualizarProductoModel($idProducto, $idCategoria, $nombre, $detalle, $precio, $existencias, $ruta_imagen)
+function ActualizarProductoModel($id, $cat, $nom, $det, $precio, $exist, $img)
 {
     try {
         $conn = conectarOracle();
 
-        $sql = "BEGIN EditarProducto(:id, :cat, :nom, :det, :pre, :cant, :img); END;";
+        $sql = "BEGIN PKG_PRODUCTOS.editar(:id, :c, :n, :d, :p, :e, :i); END;";
         $stmt = oci_parse($conn, $sql);
 
-        oci_bind_by_name($stmt, ":id",   $idProducto);
-        oci_bind_by_name($stmt, ":cat",  $idCategoria);
-        oci_bind_by_name($stmt, ":nom",  $nombre);
-        oci_bind_by_name($stmt, ":det",  $detalle);
-        oci_bind_by_name($stmt, ":pre",  $precio);
-        oci_bind_by_name($stmt, ":cant", $existencias);
-        oci_bind_by_name($stmt, ":img",  $ruta_imagen);
+        oci_bind_by_name($stmt, ":id", $id);
+        oci_bind_by_name($stmt, ":c", $cat);
+        oci_bind_by_name($stmt, ":n", $nom);
+        oci_bind_by_name($stmt, ":d", $det);
+        oci_bind_by_name($stmt, ":p", $precio);
+        oci_bind_by_name($stmt, ":e", $exist);
+        oci_bind_by_name($stmt, ":i", $img);
 
-        $ok = oci_execute($stmt);
-
-        oci_free_statement($stmt);
-        oci_close($conn);
-
-        return $ok;
+        return oci_execute($stmt);
 
     } catch (Exception $e) {
         return false;
     }
 }
 
-
 /* ============================================================
-   DESACTIVAR PRODUCTO (estado = 0)
+   DESACTIVAR PRODUCTO
 ============================================================ */
-function EliminarProductoModel($idProducto)
+function EliminarProductoModel($id)
 {
     try {
         $conn = conectarOracle();
 
-        $sql = "BEGIN EliminarProducto(:id); END;";
+        $sql = "BEGIN PKG_PRODUCTOS.desactivar(:id); END;";
         $stmt = oci_parse($conn, $sql);
 
-        oci_bind_by_name($stmt, ":id", $idProducto);
+        oci_bind_by_name($stmt, ":id", $id);
 
-        $ok = oci_execute($stmt);
-
-        oci_free_statement($stmt);
-        oci_close($conn);
-
-        return $ok;
+        return oci_execute($stmt);
 
     } catch (Exception $e) {
         return false;
     }
 }
 
-
 /* ============================================================
-   ACTIVAR PRODUCTO (estado = 1)
+   ACTIVAR PRODUCTO
 ============================================================ */
-function ActivarProductoModel($idProducto)
+function ActivarProductoModel($id)
 {
     try {
         $conn = conectarOracle();
 
-        $sql = "BEGIN ActivarProducto(:id); END;";
+        $sql = "BEGIN PKG_PRODUCTOS.activar(:id); END;";
         $stmt = oci_parse($conn, $sql);
 
-        oci_bind_by_name($stmt, ":id", $idProducto);
+        oci_bind_by_name($stmt, ":id", $id);
 
-        $ok = oci_execute($stmt);
-
-        oci_free_statement($stmt);
-        oci_close($conn);
-
-        return $ok;
+        return oci_execute($stmt);
 
     } catch (Exception $e) {
         return false;

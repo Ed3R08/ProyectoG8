@@ -9,7 +9,7 @@ function ListarFavoritosUsuarioModel($idUsuario)
     try {
         $conn = conectarOracle();
 
-        $sql = "BEGIN sp_listar_favoritos_usuario(:id, :cur); END;";
+        $sql = "BEGIN PKG_FAVORITOS.listar_usuario(:id, :cur); END;";
         $stmt = oci_parse($conn, $sql);
 
         oci_bind_by_name($stmt, ":id", $idUsuario);
@@ -24,7 +24,6 @@ function ListarFavoritosUsuarioModel($idUsuario)
         while ($fila = oci_fetch_assoc($cursor)) {
             $lista[] = array_change_key_case($fila, CASE_LOWER);
         }
-
 
         oci_free_statement($stmt);
         oci_free_statement($cursor);
@@ -44,13 +43,15 @@ function AgregarFavoritoModel($idUsuario, $idProducto)
 {
     try {
         $conn = conectarOracle();
-        $sql = "BEGIN sp_agregar_favorito(:u, :p); END;";
+
+        $sql = "BEGIN PKG_FAVORITOS.agregar(:u, :p); END;";
         $stmt = oci_parse($conn, $sql);
 
         oci_bind_by_name($stmt, ":u", $idUsuario);
         oci_bind_by_name($stmt, ":p", $idProducto);
 
-        $ok = oci_execute($stmt);
+        $ok = oci_execute($stmt);   // OCI_COMMIT_ON_SUCCESS por defecto
+        oci_free_statement($stmt);
         oci_close($conn);
 
         return $ok;
@@ -67,13 +68,15 @@ function EliminarFavoritoModel($idUsuario, $idProducto)
 {
     try {
         $conn = conectarOracle();
-        $sql = "BEGIN sp_eliminar_favorito(:u, :p); END;";
+
+        $sql = "BEGIN PKG_FAVORITOS.eliminar(:u, :p); END;";
         $stmt = oci_parse($conn, $sql);
 
         oci_bind_by_name($stmt, ":u", $idUsuario);
         oci_bind_by_name($stmt, ":p", $idProducto);
 
-        $ok = oci_execute($stmt);
+        $ok = oci_execute($stmt);   // OCI_COMMIT_ON_SUCCESS por defecto
+        oci_free_statement($stmt);
         oci_close($conn);
 
         return $ok;
